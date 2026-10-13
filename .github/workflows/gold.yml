@@ -1,0 +1,50 @@
+name: Gold Rate Alert
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # check every 15 min; WhatsApp only when rate changes
+  workflow_dispatch:
+concurrency:
+  group: gold
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check and send
+        env:
+          CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
+          WHATSAPP_PHONE: ${{ secrets.WHATSAPP_PHONE }}
+        run: |
+          python3 - <<'PY'
+          import csv, io, os, urllib.request, urllib.parse, json, datetime
+          url = 'https://docs.google.com/spreadsheets/d/1cNNoUxhpX8-uuZR-pA5q9V6rvkDFKcsG-L_awQLBrRM/gviz/tq?tqx=out:csv&sheet=Sheet1&range=A2:B5'
+          rows = list(csv.reader(io.StringIO(urllib.request.urlopen(url, timeout=30).read().decode())))
+          now = {}
+          for r in rows:
+              try: now[r[0].replace('GOLD ', '').strip()] = float(r[1])
+              except: pass
+          if len(now) < 4: print('bad data', rows); raise SystemExit(0)
+          f = 'gold_last.json'
+          old = json.load(open(f)) if os.path.exists(f) else {}
+          if old == now: print('no change'); raise SystemExit(0)
+          t = (datetime.datetime.utcnow() + datetime.timedelta(hours=4)).strftime('%d-%m-%Y %I:%M %p')
+          lines = [f'💰 ദുബായ് സ്വർണ്ണവില മാറി ({t})']
+          for k in ['24K', '22K', '21K', '18K']:
+              v = now.get(k); o = old.get(k); s = ''
+              if o is not None and v != o:
+                  s = f'  {"▲" if v > o else "▼"} {abs(v - o):.2f}'
+              lines.append(f'{k}: {v:.2f} AED{s}')
+          lines.append('per gram - dubaicityofgold.com')
+          if old and os.environ.get('CALLMEBOT_APIKEY'):
+              q = urllib.parse.urlencode({'phone': os.environ['WHATSAPP_PHONE'], 'text': '\n'.join(lines), 'apikey': os.environ['CALLMEBOT_APIKEY']})
+              print(urllib.request.urlopen('https://api.callmebot.com/whatsapp.php?' + q, timeout=60).read()[:200])
+          json.dump(now, open(f, 'w'))
+          PY
+          if ! git diff --quiet -- gold_last.json 2>/dev/null || [ -n "$(git status --porcelain gold_last.json)" ]; then
+            git config user.name "gold-bot"; git config user.email "gold-bot@users.noreply.github.com"
+            git add gold_last.json; git commit -m "gold rate update"
+            for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+          fi
