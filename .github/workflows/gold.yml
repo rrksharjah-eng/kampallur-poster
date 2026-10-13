@@ -3,6 +3,10 @@ on:
   schedule:
     - cron: "*/15 * * * *"   # check every 15 min; WhatsApp only when rate changes
   workflow_dispatch:
+    inputs:
+      sample:
+        description: "Send a sample message now (yes/blank)"
+        required: false
 concurrency:
   group: gold
   cancel-in-progress: false
@@ -17,6 +21,7 @@ jobs:
         env:
           CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
           WHATSAPP_PHONE: ${{ secrets.WHATSAPP_PHONE }}
+          SAMPLE: ${{ github.event.inputs.sample }}
         run: |
           python3 - <<'PY'
           import csv, io, os, urllib.request, urllib.parse, json, datetime
@@ -29,9 +34,10 @@ jobs:
           if len(now) < 4: print('bad data', rows); raise SystemExit(0)
           f = 'gold_last.json'
           old = json.load(open(f)) if os.path.exists(f) else {}
-          if old == now: print('no change'); raise SystemExit(0)
+          sample = os.environ.get('SAMPLE') == 'yes'
+          if old == now and not sample: print('no change'); raise SystemExit(0)
           t = (datetime.datetime.utcnow() + datetime.timedelta(hours=4)).strftime('%d-%m-%Y %I:%M %p')
-          lines = [f'💰 ദുബായ് സ്വർണ്ണവില മാറി ({t})']
+          lines = [('(സാമ്പിൾ) 💰 ദുബായ് സ്വർണ്ണവില' if sample and old == now else '💰 ദുബായ് സ്വർണ്ണവില മാറി') + f' ({t})']
           for k in ['24K', '22K', '21K', '18K']:
               v = now.get(k); o = old.get(k); s = ''
               if o is not None and v != o:
