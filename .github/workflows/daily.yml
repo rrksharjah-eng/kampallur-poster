@@ -1,0 +1,40 @@
+name: Daily Kampallur Poster
+on:
+  schedule:
+    - cron: "5 20 * * *"   # 00:05 Asia/Dubai
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "DD-MM-YYYY (blank = today, Dubai)"
+        required: false
+permissions:
+  contents: write
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Fonts
+        run: for w in 600 700 800; do cat fonts/parts/Anek$w.part* > fonts/Anek$w.ttf; done
+      - name: Install
+        run: cd tools && npm install --no-audit --no-fund
+      - name: Render
+        run: mkdir -p out && node render_today.js ${{ github.event.inputs.date }}
+      - name: Save poster
+        run: |
+          mkdir -p posters
+          find posters -name '*.png' -mtime +14 -delete || true
+          cp out/*.png posters/
+          cp out/*.png posters/latest.png
+          git config user.name "poster-bot"
+          git config user.email "poster-bot@users.noreply.github.com"
+          git add -A posters
+          git commit -m "Poster $(TZ=Asia/Dubai date +%d-%m-%Y)" || echo "nothing new"
+          git push
+      - uses: actions/upload-artifact@v4
+        with:
+          name: poster
+          path: out/*.png
