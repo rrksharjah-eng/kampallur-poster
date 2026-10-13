@@ -11,6 +11,7 @@ permissions:
   contents: write
 env:
   GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+  CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
 jobs:
   render:
     runs-on: ubuntu-latest
@@ -53,6 +54,14 @@ jobs:
               s.login('rrksharjah@gmail.com',os.environ['GMAIL_APP_PASSWORD']); s.send_message(m)
           print('sent',d)
           PY
+      - name: WhatsApp link
+        if: ${{ env.CALLMEBOT_APIKEY != '' }}
+        env:
+          WHATSAPP_PHONE: ${{ secrets.WHATSAPP_PHONE }}
+        run: |
+          F=$(ls out/*.png | head -1); N=$(basename "$F"); D=$(echo "$N" | sed -E 's/Poster_(.*)_UltraHD.png/\1/')
+          URL="https://raw.githubusercontent.com/rrksharjah-eng/kampallur-poster/main/posters/$N"
+          curl -sS -G "https://api.callmebot.com/whatsapp.php" --data-urlencode "phone=$WHATSAPP_PHONE" --data-urlencode "text=$(printf '🙏 കമ്പല്ലൂർ പഞ്ചാംഗം %s\n%s' "$D" "$URL")" --data-urlencode "apikey=$CALLMEBOT_APIKEY"
       - uses: actions/upload-artifact@v4
         with:
           name: poster
