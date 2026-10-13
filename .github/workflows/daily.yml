@@ -1,11 +1,11 @@
 name: Daily Kampallur Poster
 on:
   schedule:
-    - cron: "5 20 * * *"   # 00:05 Asia/Dubai
+    - cron: "30 16 * * *"   # 20:30 Asia/Dubai, renders TOMORROW's poster
   workflow_dispatch:
     inputs:
       date:
-        description: "DD-MM-YYYY (blank = today, Dubai)"
+        description: "DD-MM-YYYY (blank = tomorrow, Dubai)"
         required: false
 permissions:
   contents: write
@@ -25,7 +25,9 @@ jobs:
       - name: Install
         run: cd tools && npm install --no-audit --no-fund
       - name: Render
-        run: mkdir -p out && node render_today.js ${{ github.event.inputs.date }}
+        run: |
+          D="${{ github.event.inputs.date }}"; [ -z "$D" ] && D=$(TZ=Asia/Dubai date -d tomorrow +%d-%m-%Y)
+          mkdir -p out && node render_today.js "$D"
       - name: Save poster
         run: |
           mkdir -p posters
@@ -35,7 +37,7 @@ jobs:
           git config user.name "poster-bot"
           git config user.email "poster-bot@users.noreply.github.com"
           git add -A posters
-          git commit -m "Poster $(TZ=Asia/Dubai date +%d-%m-%Y)" || echo "nothing new"
+          git commit -m "Poster $(basename out/*.png)" || echo "nothing new"
           git push
       - name: Email poster
         if: ${{ env.GMAIL_APP_PASSWORD != '' }}
