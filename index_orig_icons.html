@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>കമ്പല്ലൂർ ശ്രീ ഭഗവതി ക്ഷേത്രം - പഞ്ചാംഗം</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Malayalam:wght@600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
+<style>
+    body {
+        margin: 0;
+        padding: 20px 10px;
+        background: #0f0f0f;
+        font-family: 'Anek Malayalam', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .download-btn {
+        margin-bottom: 16px;
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #042612;
+        border: none;
+        padding: 12px 28px;
+        font-size: 16px;
+        font-weight: 800;
+        border-radius: 30px;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        font-family: 'Anek Malayalam', sans-serif;
+        transition: transform 0.2s, background 0.2s;
+    }
+    .download-btn:hover {
+        transform: scale(1.04);
+        background: linear-gradient(135deg, #f7df8b, #d4af37);
+    }
+
+    #posterCanvas {
+        width: 100%;
+        max-width: 420px;
+        height: auto;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        display: block;
+    }
+
+    #statusText {
+        color: #f7df8b;
+        font-size: 16px;
+        font-weight: 700;
+        margin-top: 14px;
+    }
+</style>
+</head>
+<body>
+
+<button class="download-btn" onclick="saveImage()">📥 Ultra HD പോസ്റ്റർ ഡൗൺലോഡ് ചെയ്യുക</button>
+
+<!-- 1440 x 2560 Ultra HD Canvas for Crystal Clear WhatsApp Sharing -->
+<canvas id="posterCanvas" width="1440" height="2560"></canvas>
+<div id="statusText">വിവരങ്ങൾ തയ്യാറാക്കുന്നു...</div>
+
+<script>
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQsa8QDbL40tkBKn_F2Bfgkxjblsp8r4QzLeznoHC8KE1u0ct4gNu13sH1SaSbbEugtmfpAVhEyNZlt/pub?gid=668227075&single=true&output=csv";
+const IDOL_SAFE_URL = "https://i.postimg.cc/YqqpzMjS/file-00000000b494720a82cad82215803776.png";
+
+let downloadFileName = "Kamballur_Poster.png";
+
+// ---------- icons (drawn in a circle of radius 40 centred at x,y) ----------
+function icon(ctx, kind, x, y) {
+  ctx.save();
+  ctx.translate(x, y);
+  const grd = ctx.createRadialGradient(0, -8, 4, 0, 0, 42);
+  grd.addColorStop(0, '#0d6b35'); grd.addColorStop(1, '#022913');
+  ctx.beginPath(); ctx.arc(0, 0, 42, 0, Math.PI * 2); ctx.fillStyle = grd; ctx.fill();
+  ctx.beginPath(); ctx.arc(0, 0, 42, 0, Math.PI * 2); ctx.lineWidth = 3; ctx.strokeStyle = '#d4af37'; ctx.stroke();
+  ctx.strokeStyle = '#f7df8b'; ctx.fillStyle = '#f7df8b'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+  const arrow = (up) => {
+    ctx.beginPath(); ctx.moveTo(0, up ? -6 : -26); ctx.lineTo(0, up ? -26 : -6); ctx.stroke();
+    ctx.beginPath();
+    if (up) { ctx.moveTo(-7, -19); ctx.lineTo(0, -27); ctx.lineTo(7, -19); }
+    else { ctx.moveTo(-7, -13); ctx.lineTo(0, -5); ctx.lineTo(7, -13); }
+    ctx.stroke();
+  };
+  if (kind === 'sunrise' || kind === 'sunset') {
+    ctx.beginPath(); ctx.arc(0, 16, 14, Math.PI, 0); ctx.fill();
+    for (const a of [-2.6, -2.0, -1.14, -0.54]) { ctx.beginPath(); ctx.moveTo(Math.cos(a) * 19, 16 + Math.sin(a) * 19); ctx.lineTo(Math.cos(a) * 26, 16 + Math.sin(a) * 26); ctx.stroke(); }
+    ctx.beginPath(); ctx.moveTo(-26, 18); ctx.lineTo(26, 18); ctx.stroke();
+    arrow(kind === 'sunrise');
+  } else if (kind === 'moonrise' || kind === 'moonset') {
+    ctx.beginPath(); ctx.arc(-2, 10, 16, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#04391b';
+    ctx.beginPath(); ctx.arc(6, 4, 14, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#f7df8b';
+    ctx.beginPath(); ctx.moveTo(-26, 28); ctx.lineTo(26, 28); ctx.stroke();
+    ctx.save(); ctx.translate(16, 2); arrow(kind === 'moonrise'); ctx.restore();
+  } else if (kind === 'tithi') {
+    ctx.beginPath(); ctx.arc(0, 0, 20, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 20, -Math.PI / 2, Math.PI / 2); ctx.fill();
+  } else if (kind === 'star') {
+    ctx.beginPath();
+    for (let i = 0; i < 10; i++) { const r = i % 2 ? 9 : 22, a = -Math.PI / 2 + i * Math.PI / 5; ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r); }
+    ctx.closePath(); ctx.fill();
+  } else { // clock (rahu / gulika)
+    ctx.beginPath(); ctx.arc(0, 0, 21, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -13); ctx.moveTo(0, 0); ctx.lineTo(kind === 'rahu' ? 10 : -10, 6); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function fitFontO(ctx, text, weight, size, maxW) {
+  let s = size;
+  do { ctx.font = `${weight} ${s}px "Anek Malayalam"`; s -= 2; } while (ctx.measureText(text).width > maxW && s > 22);
+}
+function drawPoster(data) {
+    const canvas = document.getElementById('posterCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // 1. Ultra HD Background Gradient
+    const bgGrad = ctx.createRadialGradient(720, 1000, 150, 720, 1280, 1400);
+    bgGrad.addColorStop(0, '#fefdfb');
+    bgGrad.addColorStop(0.5, '#f6eee2');
+    bgGrad.addColorStop(1, '#e6dabe');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 1440, 2560);
+
+    // 2. High Resolution Image Render
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = IDOL_SAFE_URL;
+
+    img.onload = () => {
+        ctx.save();
+        const topMargin = 55; 
+        const imageAreaHeight = 840;
+        
+        ctx.beginPath();
+        ctx.roundRect(40, topMargin, 1360, imageAreaHeight, 28);
+        ctx.clip();
+
+        const scale = Math.min(1360 / img.width, imageAreaHeight / img.height) * 1.12;
+        const drawW = img.width * scale;
+        const drawH = img.height * scale;
+        const drawX = (1440 - drawW) / 2;
+        const drawY = topMargin + (imageAreaHeight - drawH) / 2 + 15;
+
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, drawX, drawY, drawW, drawH);
+
+        const fadeGrad = ctx.createLinearGradient(0, topMargin + imageAreaHeight - 90, 0, topMargin + imageAreaHeight);
+        fadeGrad.addColorStop(0, 'rgba(246, 238, 226, 0)');
+        fadeGrad.addColorStop(1, '#f6eee2');
+        ctx.fillStyle = fadeGrad;
+        ctx.fillRect(0, topMargin + imageAreaHeight - 90, 1440, 90);
+        ctx.restore();
+
+        // 3. Crisp Golden Outer Frame
+        ctx.lineWidth = 18;
+        ctx.strokeStyle = '#b8860b';
+        ctx.strokeRect(9, 9, 1422, 2542);
+
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'rgba(212, 175, 55, 0.45)';
+        ctx.strokeRect(26, 26, 1388, 2508);
+
+        // 4. Emerald Green Date Badge
+        ctx.save();
+        const badgeX = 120, badgeY = 920, badgeW = 1200, badgeH = 145, badgeR = 72;
+        ctx.beginPath();
+        ctx.roundRect(badgeX, badgeY, badgeW, badgeH, badgeR);
+        const badgeGrad = ctx.createRadialGradient(720, badgeY + 72, 15, 720, badgeY + 72, 600);
+        badgeGrad.addColorStop(0, '#0a4b27');
+        badgeGrad.addColorStop(1, '#022913');
+        ctx.fillStyle = badgeGrad;
+        ctx.fill();
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = '#d4af37';
+        ctx.stroke();
+
+        ctx.fillStyle = '#f7df8b';
+        ctx.font = '42px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('❖', badgeX + 60, badgeY + 90);
+        ctx.fillText('❖', badgeX + badgeW - 60, badgeY + 90);
+
+        ctx.fillStyle = '#f7df8b';
+        ctx.font = '900 68px "Anek Malayalam"';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetY = 4;
+        ctx.fillText(data.mainDate, 720, badgeY + 98);
+        ctx.restore();
+
+        // 5. Sub-Date
+        ctx.save();
+        ctx.font = '800 50px "Anek Malayalam"';
+        ctx.fillStyle = '#0b2e1b';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${data.malMonth}   |   ${data.engDate}`, 720, 1135);
+        ctx.restore();
+
+        // 6. Panchangam Table Box
+        ctx.save();
+        const tX = 100, tY = 1180, tW = 1240, tH = 650, tR = 40;
+        ctx.beginPath();
+        ctx.roundRect(tX, tY, tW, tH, tR);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.74)';
+        ctx.fill();
+        ctx.lineWidth = 4.5;
+        ctx.strokeStyle = '#c9a646';
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(720, tY + 20);
+        ctx.lineTo(720, tY + tH - 20);
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = '#d8c4a0';
+        ctx.stroke();
+
+        const rowH = tH / 4;
+        for (let i = 1; i <= 3; i++) {
+            ctx.beginPath();
+            ctx.moveTo(tX + 20, tY + (rowH * i));
+            ctx.lineTo(tX + tW - 20, tY + (rowH * i));
+            ctx.stroke();
+        }
+
+        const rows = [
+            [
+                { label: "സൂര്യോദയം", val: data.sunrise, ic: "sunrise" },
+                { label: "സൂര്യാസ്തമയം", val: data.sunset, ic: "sunset" }
+            ],
+            [
+                { label: "ചന്ദ്രോദയം", val: data.moonrise, ic: "moonrise" },
+                { label: "ചന്ദ്രാസ്തമയം", val: data.moonset, ic: "moonset" }
+            ],
+            [
+                { label: "തിഥി", val: data.tithi, ic: "tithi" },
+                { label: "നക്ഷത്രം", val: data.star, ic: "star" }
+            ],
+            [
+                { label: "രാഹുകാലം", val: data.rahukalam, ic: "rahu" },
+                { label: "ഗുളികകാലം", val: data.gulikakalam, ic: "gulika" }
+            ]
+        ];
+
+        rows.forEach((row, rIdx) => {
+            const currentY = tY + (rIdx * rowH);
+            row.forEach((cell, cIdx) => {
+                const cx = (cIdx === 0 ? tX : 720);
+                icon(ctx, cell.ic, cx + 80, currentY + rowH / 2);
+                ctx.textAlign = 'left';
+                ctx.font = '700 37px "Anek Malayalam"';
+                ctx.fillStyle = '#1a4329';
+                ctx.fillText(cell.label, cx + 145, currentY + 66);
+                fitFontO(ctx, String(cell.val || '-'), 800, 48, 620 - 165);
+                ctx.fillStyle = '#080808';
+                ctx.fillText(String(cell.val || '-'), cx + 145, currentY + 128);
+            });
+        });
+        ctx.restore();
+
+        // 7. Mantra Box
+        ctx.save();
+        const mX = 100, mY = 1875, mW = 1240, mH = 280, mR = 32;
+        ctx.beginPath();
+        ctx.roundRect(mX, mY, mW, mH, mR);
+        const mGrad = ctx.createRadialGradient(720, 2015, 25, 720, 2015, 600);
+        mGrad.addColorStop(0, '#0a4b27');
+        mGrad.addColorStop(1, '#022913');
+        ctx.fillStyle = mGrad;
+        ctx.fill();
+        ctx.lineWidth = 4.5;
+        ctx.strokeStyle = '#d4af37';
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '800 44px "Anek Malayalam"';
+        ctx.textAlign = 'center';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
+        ctx.shadowBlur = 8;
+        ctx.shadowOffsetY = 3;
+
+        const mantraLines = data.mantra.split('\n');
+        if (mantraLines.length > 1) {
+            ctx.fillText(mantraLines[0], 720, mY + 112);
+            ctx.fillText(mantraLines[1], 720, mY + 200);
+        } else {
+            ctx.fillText(data.mantra, 720, mY + 160);
+        }
+        ctx.restore();
+
+        // 8. Footer Section
+        ctx.save();
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#06381b';
+        ctx.font = '900 58px "Anek Malayalam"';
+        ctx.fillText("കമ്പല്ലൂർ ശ്രീ ഭഗവതി ക്ഷേത്രം", 720, 2240);
+
+        ctx.font = '32px sans-serif';
+        ctx.fillStyle = '#b8860b';
+        ctx.fillText("❖", 720, 2304);
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = '#b8860b';
+        ctx.beginPath();
+        ctx.moveTo(510, 2294);
+        ctx.lineTo(690, 2294);
+        ctx.moveTo(750, 2294);
+        ctx.lineTo(930, 2294);
+        ctx.stroke();
+
+        ctx.fillStyle = '#1a3c27';
+        ctx.font = '700 42px "Anek Malayalam"';
+        ctx.fillText("കമ്പല്ലൂർ, കാസർഗോഡ് ജില്ല", 720, 2380);
+        ctx.restore();
+
+        // 9. Watermark (Right safe edge)
+        ctx.save();
+        ctx.translate(1395, 1700);
+        ctx.rotate(Math.PI / 2);
+        ctx.font = '700 25px Arial';
+        ctx.fillStyle = 'rgba(140, 100, 30, 0.55)';
+        ctx.letterSpacing = "2px";
+        ctx.textAlign = 'center';
+        ctx.fillText("Rajeesh Raveendra | +971562769519", 0, 0);
+        ctx.restore();
+
+        document.getElementById('statusText').innerText = "പോസ്റ്റർ തയ്യാറാണ്! Ultra HD-യിൽ ഡൗൺലോഡ് ആകുന്നു...";
+
+        setTimeout(() => {
+            saveImage();
+        }, 1200);
+    };
+}
+
+function saveImage() {
+    const canvas = document.getElementById('posterCanvas');
+    const link = document.createElement('a');
+    link.download = downloadFileName;
+    // Lossless PNG at maximum quality
+    link.href = canvas.toDataURL('image/png', 1.0);
+    link.click();
+}
+
+Papa.parse(CSV_URL, {
+    download: true,
+    header: true,
+    complete: function(results) {
+        const d = new Date();
+        const todayStr = `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`;
+        const row = results.data.find(item => item['തീയതി'] && item['തീയതി'].trim() === todayStr) || results.data[0];
+
+        const months = ["ജനുവരി", "ഫെബ്രുവരി", "മാർച്ച്", "ഏപ്രിൽ", "മേയ്", "ജൂൺ", "ജൂലൈ", "ഓഗസ്റ്റ്", "സെപ്റ്റംബർ", "ഒക്ടോബർ", "നവംബർ", "ഡിസംബർ"];
+        
+        const posterData = {
+            mainDate: `${months[d.getMonth()]} ${d.getDate()} ${row ? row['ദിവസം'] : ''}`,
+            malMonth: `1202 ${row ? row['മാസം'] : ''}`,
+            engDate: row ? row['തീയതി'] : todayStr,
+            sunrise: row ? row['സൂര്യോദയം'] : '6:22 AM',
+            sunset: row ? row['സൂര്യാസ്തമയം'] : '6:20 PM',
+            moonrise: row ? row['ചന്ദ്രോദയം'] : '6:30 PM',
+            moonset: row ? row['ചന്ദ്രാസ്തമയം'] : '6:42 AM',
+            tithi: row ? row['തിഥി'] : 'പൗർണ്ണമി',
+            star: row ? row['നക്ഷത്രം'] : 'പൂരുരുട്ടാതി',
+            rahukalam: row ? row['രാഹുകാലം'] : '9:00 AM - 10:30 AM',
+            gulikakalam: row ? row['ഗുളികകാലം'] : '6:00 AM - 7:30 AM',
+            mantra: (row && (row['മന്ത്രം'] || Object.values(row)[9])) ? (row['മന്ത്രം'] || Object.values(row)[9]) : "ഭക്തിപ്രിയേ ഭേതിഗമ്യേ കമ്പല്ലൂർപുരസ്ഥിതേ\nഭക്തിം യച്ഛതു മേ മാതാ ഭഗവത്യൈ നമോസ്തു തേ"
+        };
+
+        if (row && row['തീയതി']) {
+            downloadFileName = `Poster_${row['തീയതി']}_UltraHD.png`;
+        }
+
+        document.fonts.ready.then(() => {
+            drawPoster(posterData);
+        });
+    }
+});
+</script>
+</body>
+</html>
