@@ -25,25 +25,28 @@ jobs:
         run: |
           python3 - <<'PY'
           import csv, io, os, urllib.request, urllib.parse, json, datetime
-          url = 'https://docs.google.com/spreadsheets/d/1cNNoUxhpX8-uuZR-pA5q9V6rvkDFKcsG-L_awQLBrRM/gviz/tq?tqx=out:csv&sheet=Sheet1&range=A2:B5'
+          url = 'https://docs.google.com/spreadsheets/d/1cNNoUxhpX8-uuZR-pA5q9V6rvkDFKcsG-L_awQLBrRM/gviz/tq?tqx=out:csv&sheet=Sheet1&range=A2:C5'
           rows = list(csv.reader(io.StringIO(urllib.request.urlopen(url, timeout=30).read().decode())))
-          now = {}
+          now = {}; yday = {}
           for r in rows:
-              try: now[r[0].replace('GOLD ', '').strip()] = float(r[1])
+              k = r[0].replace('GOLD ', '').strip()
+              try: now[k] = float(r[1])
+              except: continue
+              try: yday[k] = float(r[2])
               except: pass
           if len(now) < 4: print('bad data', rows); raise SystemExit(0)
           f = 'gold_last.json'
           old = json.load(open(f)) if os.path.exists(f) else {}
           sample = os.environ.get('SAMPLE') == 'yes'
           if old == now and not sample: print('no change'); raise SystemExit(0)
-          t = (datetime.datetime.utcnow() + datetime.timedelta(hours=4)).strftime('%d-%m-%Y %I:%M %p')
-          lines = [('(സാമ്പിൾ) 💰 ദുബായ് സ്വർണ്ണവില' if sample and old == now else '💰 ദുബായ് സ്വർണ്ണവില മാറി') + f' ({t})']
+          t = (datetime.datetime.utcnow() + datetime.timedelta(hours=4)).strftime('%d %b %Y, %I:%M %p').lstrip('0').replace(', 0', ', ')
+          ref = old if old != now else yday
+          lines = ['✨ *VIJAYA JEWELLERY LLC* ✨', f'📅 Gold rates · {t}', '━━━━━━━━━━━━━━']
           for k in ['24K', '22K', '21K', '18K']:
-              v = now.get(k); o = old.get(k); s = ''
-              if o is not None and v != o:
-                  s = f'  {"▲" if v > o else "▼"} {abs(v - o):.2f}'
-              lines.append(f'{k}: {v:.2f} AED{s}')
-          lines.append('per gram - dubaicityofgold.com')
+              v = now[k]; o = ref.get(k)
+              ar = '' if o is None else (' 🔺' if v > o else (' 🔻' if v < o else ''))
+              lines.append(f'🟡 *{k}*  :  AED {v:.2f} /g{ar}')
+          lines += ['━━━━━━━━━━━━━━', '📍 Gold Centre, Deira · 04 226 4635', '📍 Sharjah Shopping Centre, Rolla · 06 561 3815', '📲 Live rates: https://vijayajewelleryllc.web.app']
           if old and os.environ.get('CALLMEBOT_APIKEY'):
               q = urllib.parse.urlencode({'phone': os.environ['WHATSAPP_PHONE'], 'text': '\n'.join(lines), 'apikey': os.environ['CALLMEBOT_APIKEY']})
               print(urllib.request.urlopen('https://api.callmebot.com/whatsapp.php?' + q, timeout=60).read()[:200])
