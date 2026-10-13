@@ -38,7 +38,7 @@ jobs:
           git config user.email "poster-bot@users.noreply.github.com"
           git add -A posters
           git commit -m "Poster $(basename out/*.png)" || echo "nothing new"
-          git push
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
       - name: Email poster
         if: ${{ env.GMAIL_APP_PASSWORD != '' }}
         env:
