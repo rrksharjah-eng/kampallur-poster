@@ -1,7 +1,6 @@
 name: Gold Rate Alert
 on:
-  schedule:
-    - cron: "*/15 * * * *"   # check every 15 min; WhatsApp only when rate changes
+  # schedule disabled 2026-10-14: Apps Script checkGold now sends alerts
   workflow_dispatch:
     inputs:
       sample:
