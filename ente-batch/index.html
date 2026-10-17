@@ -53,6 +53,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--board)}
 .step b{font-family:'Chilanka';font-size:30px;color:var(--red)}
 .step h4{margin:4px 0;font-size:17px}.step p{margin:0;color:var(--mut);font-size:14px}
 .search{display:flex;gap:10px;margin-bottom:16px}
+.sw{position:relative}.sug{position:absolute;left:0;right:0;top:100%;z-index:30;background:#fff;border:1px solid #d9d2c3;border-radius:10px;box-shadow:0 10px 24px rgba(0,0,0,.15);max-height:300px;overflow:auto;text-align:left}.sug div{padding:9px 12px;border-bottom:1px solid #f0ebe0;cursor:pointer;font-size:14px;color:#222}.sug div:hover{background:#f6f2e8}.sug small{display:block;color:#777;font-size:12px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
 .bcard{background:#fff;border-radius:var(--r);padding:16px 16px 14px;border:1px solid #e3ddd0;text-decoration:none;display:block;position:relative;border-top:6px solid var(--board);transition:.15s}
 .bcard:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.08)}
@@ -123,7 +124,7 @@ footer{background:var(--board);color:var(--chalk);text-align:center;padding:26px
  </div>
  <form class="note" id="find">
   <h3>നിന്റെ ബാച്ച് തുറക്ക്</h3>
-  <label>സ്കൂളിന്റെ പേര്</label><input id="fs" required maxlength="80" placeholder="ഉദാ: GHSS">
+  <label>സ്കൂളിന്റെ പേര്</label><div class="sw"><input id="fs" required maxlength="120" autocomplete="off" placeholder="ടൈപ്പ് ചെയ്യ്, ഉദാ: GHSS Cheemeni"><div id="sug" class="sug hide"></div></div><small id="fsh" style="color:var(--mut);font-size:12px">കേരളത്തിലെ എല്ലാ സ്കൂളും ലിസ്റ്റിൽ ഉണ്ട്. ഇല്ലെങ്കിൽ പേര് മുഴുവൻ ടൈപ്പ് ചെയ്യ്.</small>
   <div class="two">
    <div><label>സ്ഥലം</label><input id="fp" required maxlength="50" placeholder="ഉദാ: തളിപ്പറമ്പ്"></div>
    <div><label>പാസായ വർഷം</label><select id="fy"></select></div>
@@ -134,9 +135,9 @@ footer{background:var(--board);color:var(--chalk);text-align:center;padding:26px
 </div></section>
 
 <section class="sec" id="how"><div class="wrap">
- <h2>മൂന്ന് സ്റ്റെപ്പ്, അത്രേ ഉള്ളൂ</h2><p class="sub">ലോഗിൻ വേണ്ട, ആപ്പ് ഡൗൺലോഡ് വേണ്ട.</p>
+ <h2>മൂന്ന് സ്റ്റെപ്പ്, അത്രേ ഉള്ളൂ</h2><p class="sub">ആപ്പ് ഡൗൺലോഡ് വേണ്ട. പേരും നമ്പറും മാത്രം.</p>
  <div class="steps">
-  <div class="step"><b>1</b><h4>ബാച്ച് തുറക്ക്</h4><p>സ്കൂൾ, സ്ഥലം, SSLC / Plus Two, വർഷം.</p></div>
+  <div class="step"><b>1</b><h4>ബാച്ച് തുറക്ക്</h4><p>ലിസ്റ്റിൽ നിന്ന് സ്കൂൾ, SSLC / Plus Two, വർഷം.</p></div>
   <div class="step"><b>2</b><h4>ഹാജർ വെക്ക്</h4><p>പേരും ഇപ്പോൾ എവിടെയാണെന്നും ഒരു ഓർമ്മയും.</p></div>
   <div class="step"><b>3</b><h4>ഗ്രൂപ്പിൽ ഇട്</h4><p>ലിങ്ക് പഴയ കൂട്ടുകാർക്ക് WhatsApp ചെയ്യ്.</p></div>
  </div>
@@ -222,17 +223,31 @@ const cols=['#c0392b','#2e86de','#16a085','#8e44ad','#d35400','#27ae60','#2c3e50
 const fy=$('#fy');for(let y=new Date().getFullYear();y>=1960;y--)fy.add(new Option(y,y));fy.value=2010;
 let IDX={},cur=null,curInfo=null;
 
-async function loadIdx(){IDX=await get('i')||{};const a=Object.entries(IDX);$('#stB').textContent=a.length;$('#stM').textContent=a.reduce((s,[,v])=>s+(v.c||0),0);renderList()}
+async function loadIdx(){IDX=await get('i')||{};const a=Object.entries(IDX).filter(([,v])=>!v.mv);$('#stB').textContent=a.length;$('#stM').textContent=a.reduce((s,[,v])=>s+(v.c||0),0);renderList()}
 function renderList(){const q=$('#q').value.trim().toLowerCase();
- const a=Object.entries(IDX).filter(([k,v])=>!q||(v.s+' '+v.pl+' '+v.y+' '+(v.l||'SSLC')).toLowerCase().includes(q)).sort((a,b)=>(b[1].c||0)-(a[1].c||0)).slice(0,60);
+ const a=Object.entries(IDX).filter(([k,v])=>!v.mv).filter(([k,v])=>!q||(v.s+' '+v.pl+' '+v.y+' '+(v.l||'SSLC')).toLowerCase().includes(q)).sort((a,b)=>(b[1].c||0)-(a[1].c||0)).slice(0,60);
  $('#list').innerHTML=a.length?a.map(([k,v])=>`<a class="bcard" href="#b=${encodeURIComponent(k)}"><div class="y">${v.y} ${esc(v.l||'SSLC')}</div><h4>${esc(v.s)}</h4><p>📍 ${esc(v.pl)}</p><span class="pill">${v.c||0} പേർ ഹാജർ</span></a>`).join(''):`<div class="empty">ഇതുവരെ ഒന്നും ഇല്ല. നിന്റെ ബാച്ച് ആദ്യം തുറക്ക്!</div>`}
 $('#q').oninput=renderList;
-$('#find').onsubmit=e=>{e.preventDefault();const s=$('#fs').value.trim(),p=$('#fp').value.trim(),y=+fy.value;const l=document.querySelector('[name=lv]:checked').value;const k=slug(s,p,y,l);
- sessionStorage['new_'+k]=JSON.stringify({s,pl:p,y,l});location.hash='b='+encodeURIComponent(k)};
+let SCH=null,pick=null;const lvl=()=>document.querySelector('[name=lv]:checked').value;
+const nz=t=>t.toLowerCase().replace(/government|govt/g,'g').replace(/higher secondary school/g,'hss').replace(/high school/g,'hs').replace(/[^a-z0-9\u0d00-\u0d7f ]/g,'').replace(/oo/g,'u').replace(/ee/g,'i').replace(/([a-z])\1/g,'$1');
+async function loadSch(){if(!SCH){try{SCH=await fetch('schools.json').then(r=>r.json());for(const k in SCH)SCH[k].forEach(x=>x[4]=nz(x[1]+' '+x[2]+' '+x[3]).replace(/ /g,''))}catch(e){SCH={hs:[],hss:[]}}}return SCH}
+async function suggest(){const q=$('#fs').value.trim(),box=$('#sug');pick=null;if(q.length<2){box.classList.add('hide');return}
+ const S=await loadSch(),L=lvl()==='Plus Two'?S.hss:S.hs,t=nz(q).split(' ').filter(Boolean);
+ const a=L.filter(x=>t.every(w=>x[4].includes(w))).slice(0,8);
+ if(!a.length){box.classList.add('hide');return}
+ box.innerHTML=a.map((x,i)=>`<div data-i="${i}">${esc(x[1])}<small>${esc([x[2],x[3]].filter(Boolean).join(', '))}</small></div>`).join('');box.classList.remove('hide');
+ $$('#sug div').forEach(el=>el.onmousedown=el.ontouchstart=ev=>{ev.preventDefault();const x=a[+el.dataset.i];$('#fs').value=x[1];$('#fp').value=x[2]||x[3];pick={c:x[0],d:x[3]};box.classList.add('hide')})}
+$('#fs').addEventListener('input',suggest);$('#fs').addEventListener('focus',loadSch);$('#fs').addEventListener('blur',()=>setTimeout(()=>$('#sug').classList.add('hide'),200));
+$$('[name=lv]').forEach(x=>x.onchange=()=>{pick=null;$('#sug').classList.add('hide');if($('#fs').value)suggest()});
+$('#find').onsubmit=e=>{e.preventDefault();const s=$('#fs').value.trim(),p=$('#fp').value.trim(),y=+fy.value;const l=lvl();
+ const k=pick?((l==='Plus Two'?'p2-':'')+y+'-'+(l==='Plus Two'?'hss':'hs')+pick.c):slug(s,p,y,l);
+ const info={s,pl:p,y,l};if(pick)info.sc=pick.c;
+ sessionStorage['new_'+k]=JSON.stringify(info);location.hash='b='+encodeURIComponent(k)};
 
 async function openBatch(k){cur=k;$('#home').classList.add('hide');$('#batch').classList.remove('hide');scrollTo(0,0);
  curInfo=IDX[k]||await get('i/'+k)||JSON.parse(sessionStorage['new_'+k]||'null');
  if(!curInfo){toast('ബാച്ച് കണ്ടില്ല');location.hash='';return}
+ if(curInfo.mv){location.replace('#b='+encodeURIComponent(curInfo.mv));return}
  $('#bY').textContent=curInfo.y+' '+(curInfo.l||'SSLC')+' ബാച്ച്';$('#bS').textContent=curInfo.s;const yr=new Date().getFullYear()-curInfo.y;$('#bC').insertAdjacentHTML('afterend','');document.querySelectorAll('.yrs').forEach(e=>e.remove());$('#bC').insertAdjacentHTML('afterend',`<div class="yrs">🎓 സ്കൂൾ വിട്ടിട്ട് ${yr} വർഷം</div>`);
  const link=URL0+'#b='+encodeURIComponent(k);
  $('#bWa').href='https://wa.me/?text='+encodeURIComponent(`🏫 നമ്മുടെ ${curInfo.s}, ${curInfo.pl} – ${curInfo.y} ${curInfo.l||'SSLC'} ബാച്ച് ഇവിടെ ഒത്തുകൂടുന്നു! നീയും ഹാജർ വെക്ക്, പഴയ ഫോട്ടോ ഉണ്ടെങ്കിൽ ഇട്:\n${link}`);
@@ -272,14 +287,14 @@ $('#join').onsubmit=async e=>{e.preventDefault();const n=$('#jn').value.trim(),p
  const v={n,t:Date.now()};const w=$('#jw').value.trim(),x=$('#jx').value.trim();if(w)v.w=w;if(x)v.x=x;
  try{const old=await get(`m/${cur}/${k}`);if(old&&old.t)v.t=old.t;
   await put(`m/${cur}/${k}`,v);localStorage['j_'+cur]=n;localStorage.eb_me=JSON.stringify({n,ph,w});const c=await loadMembers();
-  await put('i/'+cur,{s:curInfo.s,pl:curInfo.pl,y:curInfo.y,l:curInfo.l||'SSLC',c});IDX[cur]={...curInfo,c};
+  await put('i/'+cur,{...curInfo,l:curInfo.l||'SSLC',c});IDX[cur]={...curInfo,c};
   setJoined();toast(old?'ഹാജർ പുതുക്കി ✔':'ഹാജർ രേഖപ്പെടുത്തി ✔');tab('tW');$('.tabs').scrollIntoView({behavior:'smooth'})}catch(e){toast('എന്തോ പ്രശ്നം, വീണ്ടും നോക്ക്')}};
 function shrink(file){return new Promise(res=>{const i=new Image();i.onload=()=>{let w=i.width,h=i.height,m=1000;if(w>m||h>m){const s=m/Math.max(w,h);w=w*s|0;h=h*s|0}
  const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);let q=.75,d;do{d=c.toDataURL('image/jpeg',q);q-=.1}while(d.length>240000&&q>.2);res(d)};i.src=URL.createObjectURL(file)})}
 $('#up').onsubmit=async e=>{e.preventDefault();const f=$('#pf').files[0];if(!f)return;$('#ub').disabled=true;$('#ub').textContent='അപ്‌ലോഡ് ചെയ്യുന്നു…';
  try{const img=await shrink(f);const v={img,t:Date.now()};const c=$('#pc').value.trim();if(c)v.c=c;if(localStorage['j_'+cur])v.b=localStorage['j_'+cur].slice(0,40);
   await put(`p/${cur}/${uid()}`,v);
-  if(!IDX[cur]){await put('i/'+cur,{s:curInfo.s,pl:curInfo.pl,y:curInfo.y,l:curInfo.l||'SSLC',c:0});IDX[cur]={...curInfo,c:0}}
+  if(!IDX[cur]){await put('i/'+cur,{...curInfo,l:curInfo.l||'SSLC',c:0});IDX[cur]={...curInfo,c:0}}
   $('#up').reset();toast('ഫോട്ടോ ചേർത്തു 📸');tab('tP');loadPhotos()}catch(e){toast('അപ്‌ലോഡ് പരാജയപ്പെട്ടു')}
  $('#ub').disabled=false;$('#ub').textContent='അപ്‌ലോഡ്'};
 
