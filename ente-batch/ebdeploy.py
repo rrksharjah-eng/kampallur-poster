@@ -11,7 +11,10 @@ def call(method,path,body=None,raw=None,url=None,ct='application/json'):
         print('HTTP',e.code,e.read().decode()[:600]);sys.exit(1)
 FILES={}
 for n in NAMES:
-    b=urllib.request.urlopen(BASE+n+'?t='+str(time.time())).read();assert len(b)>1000,n;FILES['/'+n]=b
+    parts=n.split('=')[1].split('+') if '=' in n else [n];n=n.split('=')[0]
+    b=b''.join(urllib.request.urlopen(BASE+x+'?t='+str(time.time())).read() for x in parts);assert len(b)>1000,n
+    if n.endswith('.json'):json.loads(b)
+    FILES['/'+n]=b
 assert 'ente-batch' in FILES['/index.html'].decode()
 rel=call('GET',f'sites/{SITE}/releases?pageSize=1')['releases'][0]
 src=rel['version']['name'];print('current',src)
