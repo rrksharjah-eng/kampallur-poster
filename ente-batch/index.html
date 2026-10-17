@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="ml">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>എന്റെ ബാച്ച് · പഴയ സ്കൂൾ കൂട്ടുകാരെ കണ്ടെത്താം</title>
+<meta name="description" content="നിന്റെ സ്കൂളും പാസായ വർഷവും കൊടുത്ത് അതേ ബാച്ചിലെ കൂട്ടുകാരെ കണ്ടെത്ത്. പഴയ ക്ലാസ് ഫോട്ടോകളും ഓർമ്മകളും പങ്കിടാം.">
+<meta property="og:title" content="എന്റെ ബാച്ച് 🏫 പഴയ സ്കൂൾ കൂട്ടുകാരെ കണ്ടെത്താം">
+<meta property="og:description" content="നമ്മുടെ ബാച്ചിലെ എല്ലാവരെയും ഒരിടത്ത് കൂട്ടാം.">
+<meta property="og:image" content="https://ente-batch.web.app/icon-512.png">
+<meta name="theme-color" content="#1f3a2e">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Noto+Sans+Malayalam:wght@400;600;800&family=Noto+Serif+Malayalam:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--board:#1f3a2e;--board2:#284a3b;--chalk:#f3f1e7;--paper:#fdfbf4;--line:#cfe0ef;--red:#d9534f;--ink:#23303a;--mut:#6b7780;--wood:#8a5a35;--acc:#f2b632;--r:14px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font:16px/1.6 'Noto Sans Malayalam',system-ui,sans-serif;color:var(--ink);background:#f1ede2}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+/* top bar */
+.top{background:var(--board);color:var(--chalk);border-bottom:8px solid var(--wood)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+.logo{display:flex;gap:10px;align-items:center;font:800 20px 'Noto Serif Malayalam';text-decoration:none}
+.logo i{font-style:normal;width:34px;height:34px;border-radius:8px;background:var(--acc);display:grid;place-items:center;font-size:19px}
+.top nav a{font-size:14px;opacity:.85;text-decoration:none;margin-left:18px}
+/* hero chalkboard */
+.hero{background:radial-gradient(ellipse at 30% 20%,var(--board2),var(--board) 70%);color:var(--chalk);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");pointer-events:none}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;padding:54px 18px 64px;position:relative;z-index:1}
+.chalk{font-family:'Chilanka',cursive;letter-spacing:.3px}
+.hero .date{font-size:17px;opacity:.75;border-bottom:1px dashed rgba(243,241,231,.4);display:inline-block;margin-bottom:14px}
+.hero h1{font:800 clamp(30px,5vw,46px)/1.25 'Noto Serif Malayalam';margin:0 0 14px}
+.hero h1 u{text-decoration:none;color:var(--acc)}
+.hero p{font-size:17px;opacity:.9;margin:0 0 22px;max-width:520px}
+.stats{display:flex;gap:26px;font-size:14px;opacity:.85}.stats b{display:block;font-size:26px;font-family:'Chilanka'}
+/* form card = notebook */
+.note{background:var(--paper);color:var(--ink);border-radius:var(--r);padding:26px 24px 22px 46px;box-shadow:0 18px 40px rgba(0,0,0,.35);position:relative;
+ background-image:linear-gradient(90deg,transparent 30px,var(--red) 30px,var(--red) 32px,transparent 32px),repeating-linear-gradient(transparent 0 31px,var(--line) 31px 32px);transform:rotate(-.6deg)}
+.note:before{content:"";position:absolute;top:-12px;left:50%;width:110px;height:26px;margin-left:-55px;background:rgba(242,182,50,.75);transform:rotate(2deg)}
+.note h3{margin:0 0 8px;font:800 20px 'Noto Serif Malayalam'}
+label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:10px 0 4px}
+input,select,textarea{width:100%;padding:11px 12px;border:1.5px solid #c9cfd4;border-radius:10px;font:15px 'Noto Sans Malayalam';background:#fff;color:var(--ink);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--board)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;padding:12px 18px;font:700 15px 'Noto Sans Malayalam';cursor:pointer;background:var(--board);color:#fff;text-decoration:none;transition:.15s}
+.btn:hover{filter:brightness(1.15)}.btn.full{width:100%;margin-top:14px}.btn.acc{background:var(--acc);color:var(--ink)}.btn.wa{background:#1fa855}.btn.ghost{background:transparent;border:1.5px solid #c9cfd4;color:var(--ink)}
+/* sections */
+.sec{padding:46px 0}
+.sec h2{font:800 26px 'Noto Serif Malayalam';margin:0 0 6px}
+.sub{color:var(--mut);margin:0 0 22px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.step{background:#fff;border-radius:var(--r);padding:20px;border:1px solid #e3ddd0}
+.step b{font-family:'Chilanka';font-size:30px;color:var(--red)}
+.step h4{margin:4px 0;font-size:17px}.step p{margin:0;color:var(--mut);font-size:14px}
+.search{display:flex;gap:10px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.bcard{background:#fff;border-radius:var(--r);padding:16px 16px 14px;border:1px solid #e3ddd0;text-decoration:none;display:block;position:relative;border-top:6px solid var(--board);transition:.15s}
+.bcard:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.08)}
+.bcard .y{font-family:'Chilanka';font-size:28px;color:var(--board);line-height:1}
+.bcard h4{margin:6px 0 2px;font-size:16px}.bcard p{margin:0;color:var(--mut);font-size:13px}
+.pill{display:inline-block;background:#eef3ef;color:var(--board);font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:10px}
+.empty{color:var(--mut);text-align:center;padding:24px;border:2px dashed #d8d1c2;border-radius:var(--r)}
+/* batch page */
+.bhead{background:var(--board);color:var(--chalk);border-bottom:8px solid var(--wood)}
+.bhead .wrap{padding:34px 18px 30px}
+.bhead .back{font-size:14px;opacity:.8;text-decoration:none}
+.bhead h1{font:800 clamp(26px,4.5vw,40px)/1.3 'Noto Serif Malayalam';margin:8px 0 4px}
+.bhead .chalk{font-size:22px;color:var(--acc)}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.tabs{display:flex;gap:6px;border-bottom:2px solid #e0d9ca;margin:26px 0 20px}
+.tabs button{background:none;border:0;padding:10px 16px;font:700 15px 'Noto Sans Malayalam';color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tabs button.on{color:var(--board);border-color:var(--red)}
+.cols{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+.mem{display:flex;gap:12px;background:#fff;border:1px solid #e3ddd0;border-radius:var(--r);padding:14px;margin-bottom:10px}
+.av{flex:0 0 44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;font-size:18px}
+.mem h4{margin:0;font-size:16px}.mem small{color:var(--mut)}.mem p{margin:6px 0 0;font-family:'Chilanka';font-size:17px;color:#34495e}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.pol{background:#fff;padding:10px 10px 12px;box-shadow:0 6px 16px rgba(0,0,0,.12);border-radius:4px}
+.pol:nth-child(odd){transform:rotate(-1.2deg)}.pol:nth-child(even){transform:rotate(1deg)}
+.pol img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;filter:sepia(.15)}
+.pol p{margin:8px 0 0;font-family:'Chilanka';font-size:16px;text-align:center}.pol small{display:flex;justify-content:space-between;color:var(--mut);font-size:12px}
+.pol button{background:none;border:0;color:var(--mut);font-size:12px;cursor:pointer;padding:0}
+.side{position:sticky;top:14px}
+.tabs button{white-space:nowrap}
+.aw{background:#fff;border:1px solid #e3ddd0;border-radius:var(--r);padding:14px;margin-bottom:10px}
+.aw h4{margin:0 0 8px;font-size:16px}.aw .win{font-family:'Chilanka';font-size:20px;color:var(--red)}
+.aw select{margin-top:8px}.vbar{height:8px;background:#eee;border-radius:6px;overflow:hidden;margin:3px 0 6px}.vbar i{display:block;height:100%;background:var(--acc)}
+.aw small{color:var(--mut)}
+.ticket{background:var(--paper);border:2px dashed var(--board);border-radius:var(--r);padding:20px;text-align:center}
+.ticket .cd{font:400 40px 'Chilanka';color:var(--red);margin:6px 0}
+.yrs{display:inline-block;margin-top:10px;background:rgba(242,182,50,.18);color:var(--acc);padding:4px 12px;border-radius:20px;font-size:14px}
+.board{background:radial-gradient(ellipse at 40% 20%,#2c5242,#1f3a2e 75%);border:12px solid var(--wood);border-radius:10px;padding:18px;color:var(--chalk);min-height:260px;max-height:520px;overflow:auto;box-shadow:inset 0 0 30px rgba(0,0,0,.35)}
+.msg{max-width:82%;margin:8px 0;padding:8px 12px;border-radius:14px 14px 14px 4px;background:rgba(243,241,231,.12);font-size:15px;line-height:1.5;word-wrap:break-word}
+.msg.me{margin-left:auto;background:#f2b632;color:#23303a;border-radius:14px 14px 4px 14px}
+.msg b{display:block;font-size:12px;color:var(--acc)}.msg.me b{color:#5a3d00}.msg small{display:block;text-align:right;font-size:11px;opacity:.6}
+.post{font-family:'Chilanka',cursive;font-size:18px;line-height:1.5;padding:8px 0;border-bottom:1px dashed rgba(243,241,231,.18)}
+.post b{color:var(--acc);font-weight:400}.post small{opacity:.55;font-size:13px;margin-left:6px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 8px}.chips button{border:1.5px dashed var(--board);background:#fff;color:var(--board);border-radius:20px;padding:5px 11px;font:13px 'Noto Sans Malayalam';cursor:pointer}
+.miss{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff;border:1px solid #e3ddd0;border-radius:var(--r);padding:12px 14px;margin-bottom:8px}
+.miss small{color:var(--mut);display:block}.btn.sm{padding:8px 12px;font-size:13px}
+.inv{background:var(--paper);border-radius:var(--r);padding:20px;box-shadow:0 10px 26px rgba(0,0,0,.12);border-top:6px solid var(--acc)}
+.inv h3{margin:0 0 6px;font:800 19px 'Noto Serif Malayalam'}.inv p{margin:0 0 12px;color:var(--mut);font-size:14px}
+.ok{background:#e9f5ec;color:#1d6b38;padding:12px;border-radius:10px;font-weight:600;font-size:14px}
+footer{background:var(--board);color:var(--chalk);text-align:center;padding:26px 18px;font-size:13px;opacity:.95;margin-top:30px;border-top:8px solid var(--wood)}
+.hide{display:none!important}
+.lv{display:grid;grid-template-columns:1fr 1fr;gap:8px}.lv label{margin:0;display:flex;gap:6px;align-items:center;border:1.5px solid #c9cfd4;border-radius:10px;padding:10px;background:#fff;color:var(--ink);font-size:14px;cursor:pointer}.lv input{width:auto}.lv label:has(input:checked){border-color:var(--board);background:#eef3ef}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:30px;font-size:14px;z-index:9;opacity:0;transition:.3s}.toast.on{opacity:1}
+@media(max-width:800px){.hero .wrap,.cols{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.top nav{display:none}.side{position:static}.hero .wrap{padding:34px 18px 44px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+ <a class="logo" href="#"><i>🏫</i>എന്റെ ബാച്ച്</a>
+ <nav><a href="#how">എങ്ങനെ</a><a href="#batches">ബാച്ചുകൾ</a></nav>
+</div></header>
+
+<div id="home">
+<section class="hero"><div class="wrap">
+ <div>
+  <h1>അന്ന് ഒരേ ബെഞ്ചിൽ ഇരുന്നവരെ <u>വീണ്ടും കണ്ടെത്താം</u></h1>
+  <p>നിന്റെ സ്കൂളും SSLC / Plus Two പാസായ വർഷവും കൊടുത്താൽ മതി. അതേ ബാച്ചിലെ കൂട്ടുകാർ, അവർ ഇപ്പോൾ എവിടെ, പഴയ ക്ലാസ് ഫോട്ടോകൾ, എല്ലാം ഒരിടത്ത്.</p>
+  <div class="stats"><div><b id="stB">0</b>ബാച്ചുകൾ</div><div><b id="stM">0</b>കൂട്ടുകാർ</div><div><b>₹0</b>ഫ്രീ</div></div>
+ </div>
+ <form class="note" id="find">
+  <h3>നിന്റെ ബാച്ച് തുറക്ക്</h3>
+  <label>സ്കൂളിന്റെ പേര്</label><input id="fs" required maxlength="80" placeholder="ഉദാ: GHSS">
+  <div class="two">
+   <div><label>സ്ഥലം</label><input id="fp" required maxlength="50" placeholder="ഉദാ: തളിപ്പറമ്പ്"></div>
+   <div><label>പാസായ വർഷം</label><select id="fy"></select></div>
+  </div>
+  <label>ബാച്ച്</label><div class="lv"><label><input type="radio" name="lv" value="SSLC" checked> SSLC (10-ാം ക്ലാസ്)</label><label><input type="radio" name="lv" value="Plus Two"> Plus Two (12-ാം ക്ലാസ്)</label></div>
+  <button class="btn full">ബാച്ചിലേക്ക് പോകാം →</button>
+ </form>
+</div></section>
+
+<section class="sec" id="how"><div class="wrap">
+ <h2>മൂന്ന് സ്റ്റെപ്പ്, അത്രേ ഉള്ളൂ</h2><p class="sub">ലോഗിൻ വേണ്ട, ആപ്പ് ഡൗൺലോഡ് വേണ്ട.</p>
+ <div class="steps">
+  <div class="step"><b>1</b><h4>ബാച്ച് തുറക്ക്</h4><p>സ്കൂൾ, സ്ഥലം, SSLC / Plus Two, വർഷം.</p></div>
+  <div class="step"><b>2</b><h4>ഹാജർ വെക്ക്</h4><p>പേരും ഇപ്പോൾ എവിടെയാണെന്നും ഒരു ഓർമ്മയും.</p></div>
+  <div class="step"><b>3</b><h4>ഗ്രൂപ്പിൽ ഇട്</h4><p>ലിങ്ക് പഴയ കൂട്ടുകാർക്ക് WhatsApp ചെയ്യ്.</p></div>
+ </div>
+</div></section>
+
+<section class="sec" id="batches" style="padding-top:0"><div class="wrap">
+ <h2>ഇതിനകം ചേർന്ന ബാച്ചുകൾ</h2><p class="sub">നിന്റെ സ്കൂൾ ഉണ്ടോ എന്ന് നോക്ക്.</p>
+ <div class="search"><input id="q" placeholder="സ്കൂൾ / സ്ഥലം / വർഷം തിരയുക"></div>
+ <div class="grid" id="list"></div>
+</div></section>
+</div>
+
+<div id="batch" class="hide">
+ <section class="bhead"><div class="wrap">
+  <a class="back" href="#">← എല്ലാ ബാച്ചുകളും</a>
+  <div class="chalk" id="bY"></div>
+  <h1 id="bS"></h1>
+  <div id="bC" style="opacity:.85"></div>
+  <div class="bar"><a class="btn wa" id="bWa" target="_blank" rel="noopener">WhatsApp-ൽ കൂട്ടുകാരെ വിളിക്ക്</a><button class="btn ghost" style="color:#fff;border-color:rgba(255,255,255,.4)" id="bCp">ലിങ്ക് കോപ്പി</button></div>
+ </div></section>
+ <div class="wrap">
+  <div class="tabs" style="overflow-x:auto"><button class="on" data-t="tM">👥 ഹാജർ</button><button data-t="tW">💬 ഗ്രൂപ്പ് ചാറ്റ്</button><button data-t="tP">📸 ഫോട്ടോകൾ</button><button data-t="tA">🏆 അവാർഡ്</button><button data-t="tR">🎉 റീയൂണിയൻ</button><button data-t="tT">👩‍🏫 ടീച്ചർമാർ</button><button data-t="tQ">🔍 കാണാനില്ല</button></div>
+  <div class="cols">
+   <div>
+    <div id="tM"></div>
+    <div id="tP" class="hide"><div class="photos" id="pl"></div></div>
+    <div id="tW" class="hide">
+     <div class="board" id="wl"></div>
+     <form id="wf">
+      <div class="chips"><button type="button">ഞങ്ങളുടെ ക്ലാസ് ടീച്ചർ…</button><button type="button">ക്ലാസിലെ ഏറ്റവും വലിയ കുസൃതി…</button><button type="button">ഉച്ചയ്ക്ക് ഞങ്ങൾ…</button><button type="button">ടൂർ പോയത്…</button><button type="button">ഇപ്പോഴും മറക്കാത്തത്…</button></div>
+      <textarea id="wx" rows="3" maxlength="500" placeholder="ബാച്ചിലെ എല്ലാവർക്കും മെസ്സേജ്…"></textarea>
+      <button class="btn full">അയക്കുക ➤</button><p class="hint" style="font-size:12px;color:var(--mut);margin:6px 0 0">🔒 ഫോൺ നമ്പർ ആർക്കും കാണില്ല, പേര് മാത്രം.</p>
+     </form>
+    </div>
+    <div id="tA" class="hide"><p class="sub">ബാച്ചിലെ ആർക്ക് ഏത് അവാർഡ്? വോട്ട് ചെയ്യ് (ഹാജർ വെച്ചവരിൽ നിന്ന്).</p><div id="al"></div></div>
+    <div id="tR" class="hide"><div id="rv"></div></div>
+    <div id="tT" class="hide"><p class="sub">നമ്മളെ പഠിപ്പിച്ച ടീച്ചർമാരെ ഓർക്കാം.</p>
+     <form id="tf" class="note" style="transform:none;margin-bottom:16px"><div class="two"><div><label>ടീച്ചറുടെ പേര്</label><input id="tn" maxlength="40" required></div><div><label>വിഷയം</label><input id="ts" maxlength="30" placeholder="ഉദാ: കണക്ക്"></div></div><label>ഓർമ്മ</label><input id="tx" maxlength="200" placeholder="ഉദാ: ചൂരൽ എപ്പോഴും കയ്യിൽ…"><button class="btn full">ചേർക്ക്</button></form>
+     <div id="tl"></div></div>
+    <div id="tQ" class="hide">
+     <p class="sub">ഇതുവരെ വരാത്ത കൂട്ടുകാരുടെ പേര് ചേർക്ക്. ആരുടെയെങ്കിലും നമ്പർ കയ്യിലുണ്ടെങ്കിൽ “ഞാൻ വിളിക്കാം” അമർത്ത്.</p>
+     <form id="qf" class="search"><input id="qn" maxlength="40" placeholder="കൂട്ടുകാരന്റെ പേര്" required><button class="btn">ചേർക്ക്</button></form>
+     <div id="ql"></div>
+    </div>
+   </div>
+   <aside class="side">
+    <form class="note" id="join">
+     <h3>ഹാജർ വെക്ക് ✋</h3>
+     <p class="hint" style="font-size:13px;color:var(--mut);margin:0 0 8px">ഒറ്റ തവണ സൈൻ അപ്പ്: പേരും ഫോൺ നമ്പറും. ഒരാൾക്ക് ഒരു ഹാജർ മാത്രം.</p>
+     <label>നിന്റെ പേര്</label><input id="jn" required maxlength="40">
+     <label>ഫോൺ നമ്പർ (WhatsApp)</label><input id="jph" type="tel" inputmode="tel" required minlength="8" maxlength="18" placeholder="ഉദാ: +91 98xxxxxxx">
+     <p class="hint" style="font-size:12px;color:var(--mut);margin:4px 0 0">🔒 നമ്പർ ആർക്കും കാണില്ല, ഒരാൾ രണ്ടുതവണ ചേരാതിരിക്കാൻ മാത്രം.</p>
+     <label>ഇപ്പോൾ എവിടെ?</label><input id="jw" maxlength="40" placeholder="ഉദാ: ദുബായ്">
+     <label>സ്കൂളിലെ ഒരു ഓർമ്മ</label><textarea id="jx" rows="3" maxlength="300" placeholder="ഉദാ: ഉച്ചക്കഞ്ഞിയും പയറും…"></textarea>
+     <button class="btn full">ഹാജർ</button>
+    </form>
+    <div class="inv hide" id="joined"><h3>ഹാജർ ആയി, <span id="jnm"></span>! ✔</h3><p>ഇനി ബാച്ച് നിറയ്ക്കണം. പഴയ ക്ലാസ് ഗ്രൂപ്പിലോ കൂട്ടുകാർക്കോ ലിങ്ക് അയക്ക്.</p>
+     <a class="btn wa full" id="iWa" target="_blank" rel="noopener">WhatsApp-ൽ വിളിക്ക്</a><button class="btn full ghost" id="goW">💬 ഗ്രൂപ്പ് ചാറ്റ് തുറക്ക്</button><button class="btn full ghost" id="goQ">🔍 വരാത്തവരുടെ പേര് ചേർക്ക്</button></div>
+    <form class="note" id="up" style="margin-top:22px">
+     <h3>ഫോട്ടോ ചേർക്ക് 📷</h3>
+     <input type="file" id="pf" accept="image/*" required>
+     <label>അടിക്കുറിപ്പ്</label><input id="pc" maxlength="100" placeholder="ഉദാ: 10 B, ടൂർ 2001">
+     <button class="btn full acc" id="ub">അപ്‌ലോഡ്</button>
+    </form>
+   </aside>
+  </div>
+ </div>
+</div>
+
+<footer>എന്റെ ബാച്ച് · പഴയ സ്കൂൾ ഓർമ്മകൾക്ക്<div style="margin-top:10px;font-size:14px">Web designed by <b>Rajeesh Raveendra Kamballur</b><br><a href="https://wa.me/971562769519" target="_blank" rel="noopener" style="color:#f2b632;text-decoration:none">📞 +971 56 276 9519</a></div></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const DB='https://ttbfixing-69b09-default-rtdb.firebaseio.com/eb',URL0='https://ente-batch.web.app/';
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const get=p=>fetch(`${DB}/${p}.json`).then(r=>r.json());
+const put=(p,v,m='PUT')=>fetch(`${DB}/${p}.json`,{method:m,body:JSON.stringify(v)}).then(r=>{if(!r.ok)throw r;return r.json()});
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2200)};
+const slug=(s,p,y,l)=>((l==='Plus Two'?'p2-':'')+y+'-'+s+'-'+p).toLowerCase().replace(/[.$#\[\]\/]/g,'').replace(/\s+/g,'-').slice(0,110);
+const cols=['#c0392b','#2e86de','#16a085','#8e44ad','#d35400','#27ae60','#2c3e50','#b9770e'];
+const fy=$('#fy');for(let y=new Date().getFullYear();y>=1960;y--)fy.add(new Option(y,y));fy.value=2010;
+let IDX={},cur=null,curInfo=null;
+
+async function loadIdx(){IDX=await get('i')||{};const a=Object.entries(IDX);$('#stB').textContent=a.length;$('#stM').textContent=a.reduce((s,[,v])=>s+(v.c||0),0);renderList()}
+function renderList(){const q=$('#q').value.trim().toLowerCase();
+ const a=Object.entries(IDX).filter(([k,v])=>!q||(v.s+' '+v.pl+' '+v.y+' '+(v.l||'SSLC')).toLowerCase().includes(q)).sort((a,b)=>(b[1].c||0)-(a[1].c||0)).slice(0,60);
+ $('#list').innerHTML=a.length?a.map(([k,v])=>`<a class="bcard" href="#b=${encodeURIComponent(k)}"><div class="y">${v.y} ${esc(v.l||'SSLC')}</div><h4>${esc(v.s)}</h4><p>📍 ${esc(v.pl)}</p><span class="pill">${v.c||0} പേർ ഹാജർ</span></a>`).join(''):`<div class="empty">ഇതുവരെ ഒന്നും ഇല്ല. നിന്റെ ബാച്ച് ആദ്യം തുറക്ക്!</div>`}
+$('#q').oninput=renderList;
+$('#find').onsubmit=e=>{e.preventDefault();const s=$('#fs').value.trim(),p=$('#fp').value.trim(),y=+fy.value;const l=document.querySelector('[name=lv]:checked').value;const k=slug(s,p,y,l);
+ sessionStorage['new_'+k]=JSON.stringify({s,pl:p,y,l});location.hash='b='+encodeURIComponent(k)};
+
+async function openBatch(k){cur=k;$('#home').classList.add('hide');$('#batch').classList.remove('hide');scrollTo(0,0);
+ curInfo=IDX[k]||await get('i/'+k)||JSON.parse(sessionStorage['new_'+k]||'null');
+ if(!curInfo){toast('ബാച്ച് കണ്ടില്ല');location.hash='';return}
+ $('#bY').textContent=curInfo.y+' '+(curInfo.l||'SSLC')+' ബാച്ച്';$('#bS').textContent=curInfo.s;const yr=new Date().getFullYear()-curInfo.y;$('#bC').insertAdjacentHTML('afterend','');document.querySelectorAll('.yrs').forEach(e=>e.remove());$('#bC').insertAdjacentHTML('afterend',`<div class="yrs">🎓 സ്കൂൾ വിട്ടിട്ട് ${yr} വർഷം</div>`);
+ const link=URL0+'#b='+encodeURIComponent(k);
+ $('#bWa').href='https://wa.me/?text='+encodeURIComponent(`🏫 നമ്മുടെ ${curInfo.s}, ${curInfo.pl} – ${curInfo.y} ${curInfo.l||'SSLC'} ബാച്ച് ഇവിടെ ഒത്തുകൂടുന്നു! നീയും ഹാജർ വെക്ക്, പഴയ ഫോട്ടോ ഉണ്ടെങ്കിൽ ഇട്:\n${link}`);
+ $('#bCp').onclick=()=>{navigator.clipboard.writeText(link);toast('ലിങ്ക് കോപ്പി ചെയ്തു')};
+ $('#iWa').href=$('#bWa').href;setJoined();fillJoin();tab('tM');
+ loadMembers();loadPhotos()}
+let MEM=[];async function loadMembers(){const m=Object.values(await get('m/'+cur)||{}).sort((a,b)=>a.t-b.t);MEM=[...new Set(m.map(x=>x.n))];
+ $('#bC').textContent=`📍 ${curInfo.pl} · ${m.length} പേർ ഹാജർ`;
+ $('#tM').innerHTML=m.length?m.map((x,i)=>`<div class="mem"><div class="av" style="background:${cols[i%cols.length]}">${esc(x.n[0])}</div><div><h4>${esc(x.n)}</h4><small>${x.w?'📍 '+esc(x.w):''}</small>${x.x?`<p>“${esc(x.x)}”</p>`:''}</div></div>`).join(''):`<div class="empty">ഹാജർ പുസ്തകം കാലിയാണ്. ആദ്യത്തെ പേര് നിന്റേതാവട്ടെ!</div>`;return m.length}
+async function loadPhotos(){const [p,r]=await Promise.all([get('p/'+cur),get('r/'+cur)]);const rep=r||{};
+ const a=Object.entries(p||{}).filter(([id])=>(rep[id]||0)<3).sort((a,b)=>b[1].t-a[1].t);
+ $('#pl').innerHTML=a.length?a.map(([id,x])=>`<div class="pol"><img src="${x.img}" loading="lazy" alt=""><p>${esc(x.c||'')}</p><small><span>${esc(x.b||'')}</span><button data-r="${id}">⚑ റിപ്പോർട്ട്</button></small></div>`).join(''):`<div class="empty">പഴയ ക്ലാസ് ഫോട്ടോ ഉണ്ടോ? ആദ്യം നീ ഇട്!</div>`;
+ $$('[data-r]').forEach(b=>b.onclick=async()=>{if(!confirm('ഈ ഫോട്ടോ മോശമാണെന്ന് റിപ്പോർട്ട് ചെയ്യട്ടെ?'))return;await put(`r/${cur}/${b.dataset.r}`,(rep[b.dataset.r]||0)+1);toast('റിപ്പോർട്ട് ചെയ്തു');loadPhotos()})}
+const tab=t=>{$$('.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));['tM','tW','tP','tQ','tA','tR','tT'].forEach(i=>$('#'+i).classList.toggle('hide',i!==t));if(t==='tA')loadAw();if(t==='tR')loadRu();if(t==='tT')loadTc();clearInterval(poll);if(t==='tW'){lastN=-1;loadBoard();poll=setInterval(()=>{if(!document.hidden)loadBoard()},5000)}if(t==='tQ')loadMiss()};
+$$('.tabs button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
+const me=()=>localStorage['j_'+cur];
+const ago=t=>{const m=(Date.now()-t)/6e4|0;return m<1?'ഇപ്പോൾ':m<60?m+' മിനിറ്റ് മുമ്പ്':m<1440?(m/60|0)+' മണിക്കൂർ മുമ്പ്':(m/1440|0)+' ദിവസം മുമ്പ്'};
+function setJoined(){const n=me();$('#join').classList.toggle('hide',!!n);$('#joined').classList.toggle('hide',!n);if(n)$('#jnm').textContent=n}
+let lastN=-1,poll=null;
+async function loadBoard(){const a=Object.values(await get('w/'+cur)||{}).sort((a,b)=>a.t-b.t);if(a.length===lastN)return;lastN=a.length;const n=me(),el=$('#wl');
+ el.innerHTML=a.length?a.map(x=>`<div class="msg ${x.n===n?'me':''}">${x.n===n?'':`<b>${esc(x.n)}</b>`}${esc(x.x)}<small>${ago(x.t)}</small></div>`).join(''):'<div class="post" style="opacity:.7">ചാറ്റ് തുടങ്ങിയിട്ടില്ല… ആദ്യ മെസ്സേജ് നിന്റേതാവട്ടെ! 👋</div>';el.scrollTop=el.scrollHeight}
+$('#wx').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&innerWidth>800){e.preventDefault();$('#wf').requestSubmit()}});
+$$('.chips button').forEach(b=>b.onclick=()=>{$('#wx').value=b.textContent.replace('…',' ');$('#wx').focus()});
+$('#wf').onsubmit=async e=>{e.preventDefault();if(!me()){toast('ആദ്യം ഹാജർ വെക്ക് ✋');$('#jn').focus();return}const x=$('#wx').value.trim();if(!x)return;
+ try{await put(`w/${cur}/${uid()}`,{n:me().slice(0,40),x,t:Date.now()});$('#wx').value='';lastN=-1;loadBoard()}catch(e){toast('എന്തോ പ്രശ്നം')}};
+async function loadMiss(){const a=Object.entries(await get('q/'+cur)||{}).sort((a,b)=>a[1].t-b[1].t);
+ $('#ql').innerHTML=a.length?a.map(([id,x])=>`<div class="miss"><div><b>${esc(x.n)}</b><small>${x.h?'📞 '+esc(x.h)+' വിളിക്കും':'ആരും ഇതുവരെ ബന്ധപ്പെട്ടില്ല'}</small></div>${x.h?'':`<button class="btn sm acc" data-h="${id}">ഞാൻ വിളിക്കാം</button>`}</div>`).join(''):'<div class="empty">ആരെയെങ്കിലും കാണാനില്ലേ? പേര് ചേർക്ക്.</div>';
+ $$('[data-h]').forEach(b=>b.onclick=async()=>{if(!me()){toast('ആദ്യം ഹാജർ വെക്ക് ✋');return}const x=a.find(([i])=>i===b.dataset.h)[1];await put(`q/${cur}/${b.dataset.h}`,{...x,h:me().slice(0,40)});toast('നന്ദി! 📞');loadMiss()})}
+$('#qf').onsubmit=async e=>{e.preventDefault();const n=$('#qn').value.trim();if(!n)return;const v={n,t:Date.now()};if(me())v.by=me().slice(0,40);
+ try{await put(`q/${cur}/${uid()}`,v);$('#qn').value='';loadMiss()}catch(e){toast('എന്തോ പ്രശ്നം')}};
+$('#goW').onclick=()=>{tab('tW');$('.tabs').scrollIntoView({behavior:'smooth'})};$('#goQ').onclick=()=>{tab('tQ');$('.tabs').scrollIntoView({behavior:'smooth'})};
+const PROF=()=>{try{return JSON.parse(localStorage.eb_me||'null')}catch(e){return null}};
+async function phKey(ph){let d=ph.replace(/\D/g,'');if(d.length<8)return null;d=d.slice(-9);const h=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('eb:'+d));return [...new Uint8Array(h)].slice(0,8).map(b=>b.toString(16).padStart(2,'0')).join('')}
+function fillJoin(){const p=PROF();if(!p)return;if(!$('#jn').value)$('#jn').value=p.n||'';if(!$('#jph').value)$('#jph').value=p.ph||'';if(!$('#jw').value)$('#jw').value=p.w||''}
+$('#join').onsubmit=async e=>{e.preventDefault();const n=$('#jn').value.trim(),ph=$('#jph').value.trim();if(!n)return;
+ const k=await phKey(ph);if(!k){toast('ശരിയായ ഫോൺ നമ്പർ കൊടുക്ക്');$('#jph').focus();return}
+ const v={n,t:Date.now()};const w=$('#jw').value.trim(),x=$('#jx').value.trim();if(w)v.w=w;if(x)v.x=x;
+ try{const old=await get(`m/${cur}/${k}`);if(old&&old.t)v.t=old.t;
+  await put(`m/${cur}/${k}`,v);localStorage['j_'+cur]=n;localStorage.eb_me=JSON.stringify({n,ph,w});const c=await loadMembers();
+  await put('i/'+cur,{s:curInfo.s,pl:curInfo.pl,y:curInfo.y,l:curInfo.l||'SSLC',c});IDX[cur]={...curInfo,c};
+  setJoined();toast(old?'ഹാജർ പുതുക്കി ✔':'ഹാജർ രേഖപ്പെടുത്തി ✔');tab('tW');$('.tabs').scrollIntoView({behavior:'smooth'})}catch(e){toast('എന്തോ പ്രശ്നം, വീണ്ടും നോക്ക്')}};
+function shrink(file){return new Promise(res=>{const i=new Image();i.onload=()=>{let w=i.width,h=i.height,m=1000;if(w>m||h>m){const s=m/Math.max(w,h);w=w*s|0;h=h*s|0}
+ const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);let q=.75,d;do{d=c.toDataURL('image/jpeg',q);q-=.1}while(d.length>240000&&q>.2);res(d)};i.src=URL.createObjectURL(file)})}
+$('#up').onsubmit=async e=>{e.preventDefault();const f=$('#pf').files[0];if(!f)return;$('#ub').disabled=true;$('#ub').textContent='അപ്‌ലോഡ് ചെയ്യുന്നു…';
+ try{const img=await shrink(f);const v={img,t:Date.now()};const c=$('#pc').value.trim();if(c)v.c=c;if(localStorage['j_'+cur])v.b=localStorage['j_'+cur].slice(0,40);
+  await put(`p/${cur}/${uid()}`,v);
+  if(!IDX[cur]){await put('i/'+cur,{s:curInfo.s,pl:curInfo.pl,y:curInfo.y,l:curInfo.l||'SSLC',c:0});IDX[cur]={...curInfo,c:0}}
+  $('#up').reset();toast('ഫോട്ടോ ചേർത്തു 📸');tab('tP');loadPhotos()}catch(e){toast('അപ്‌ലോഡ് പരാജയപ്പെട്ടു')}
+ $('#ub').disabled=false;$('#ub').textContent='അപ്‌ലോഡ്'};
+
+function route(){const m=location.hash.match(/^#b=(.+)/);if(m)openBatch(decodeURIComponent(m[1]));else{$('#batch').classList.add('hide');$('#home').classList.remove('hide');loadIdx()}}
+
+
+const did=localStorage.did||(localStorage.did=uid());
+const AW=[['kusruthi','😈 ക്ലാസിലെ വലിയ കുസൃതി'],['padippi','📚 പഠിപ്പിസ്റ്റ്'],['pattu','🎤 പാട്ടുകാരൻ / പാട്ടുകാരി'],['late','⏰ എന്നും ലേറ്റ്'],['comedy','😂 ക്ലാസിലെ കോമഡി'],['changed','✨ ഏറ്റവും മാറിപ്പോയത്'],['leader','🧑‍✈️ ക്ലാസ് ലീഡർ'],['love','💌 ക്ലാസിലെ റൊമാന്റിക്']];
+async function loadAw(){const v=await get('v/'+cur)||{};
+ $('#al').innerHTML=AW.map(([c,t])=>{const vs=Object.entries(v[c]||{}),tot=vs.length,cnt={};vs.forEach(([,n])=>cnt[n]=(cnt[n]||0)+1);const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,3);const mine=(v[c]||{})[did]||'';
+  return `<div class="aw"><h4>${t}</h4>${top.length?`<div class="win">🏆 ${esc(top[0][0])}</div>`+top.map(([n,k])=>`<small>${esc(n)} · ${k} വോട്ട്</small><div class="vbar"><i style="width:${k/tot*100}%"></i></div>`).join(''):'<small>ഇതുവരെ വോട്ടില്ല</small>'}
+  <select data-c="${c}"><option value="">${mine?'നിന്റെ വോട്ട്: '+esc(mine):'വോട്ട് ചെയ്യ്…'}</option>${MEM.map(n=>`<option>${esc(n)}</option>`).join('')}</select></div>`}).join('')+(MEM.length?'':'<div class="empty">ആദ്യം കൂട്ടുകാർ ഹാജർ വെക്കട്ടെ, പിന്നെ വോട്ട്.</div>');
+ $$('#al select').forEach(sl=>sl.onchange=async()=>{if(!sl.value)return;await put(`v/${cur}/${sl.dataset.c}/${did}`,sl.value);toast('വോട്ട് ചെയ്തു 🗳️');loadAw()})}
+async function loadRu(){const r=await get('ru/'+cur)||{},i=r.info,ys=Object.values(r.y||{});const going=!!localStorage['ru_'+cur];
+ let h='';if(i){const days=Math.ceil((new Date(i.d)-new Date())/864e5);
+  h=`<div class="ticket"><div class="chalk" style="font-size:20px">🎉 ബാച്ച് റീയൂണിയൻ</div><div class="cd">${days>0?days+' ദിവസം കൂടി':days===0?'ഇന്നാണ്!':'കഴിഞ്ഞു'}</div><b>📅 ${esc(i.d)}${i.tm?' · '+esc(i.tm):''}</b><br>📍 ${esc(i.pl)}<p style="color:var(--mut);font-size:13px">പ്ലാൻ ചെയ്തത്: ${esc(i.by)}</p>
+  <div style="margin:10px 0"><b>${ys.length}</b> പേർ വരും${ys.length?': '+ys.map(esc).join(', '):''}</div>${going?'<div class="ok">നീ വരുമെന്ന് പറഞ്ഞു ✔</div>':'<button class="btn acc" id="rgo">🙋 ഞാൻ വരും</button>'}</div>`}
+ h+=`<form class="note" id="rf" style="transform:none;margin-top:18px"><h3>${i?'പ്ലാൻ മാറ്റാം':'റീയൂണിയൻ പ്ലാൻ ചെയ്യ്'}</h3><div class="two"><div><label>തീയതി</label><input type="date" id="rd" required></div><div><label>സമയം</label><input id="rt" maxlength="20" placeholder="ഉദാ: രാവിലെ 10"></div></div><label>സ്ഥലം</label><input id="rp" maxlength="60" required placeholder="ഉദാ: സ്കൂൾ ഗ്രൗണ്ട്"><button class="btn full">സേവ്</button></form>`;
+ $('#rv').innerHTML=h;
+ const g=$('#rgo');if(g)g.onclick=async()=>{if(!me()){toast('ആദ്യം ഹാജർ വെക്ക് ✋');return}await put(`ru/${cur}/y/${did}`,me().slice(0,40));localStorage['ru_'+cur]=1;loadRu()};
+ $('#rf').onsubmit=async e=>{e.preventDefault();if(!me()){toast('ആദ്യം ഹാജർ വെക്ക് ✋');return}const v={d:$('#rd').value,pl:$('#rp').value.trim(),by:me().slice(0,40)};const t=$('#rt').value.trim();if(t)v.tm=t;
+  try{await put(`ru/${cur}/info`,v);toast('റീയൂണിയൻ സേവ് ചെയ്തു 🎉');loadRu()}catch(e){toast('എന്തോ പ്രശ്നം')}}}
+async function loadTc(){const a=Object.values(await get('tc/'+cur)||{}).sort((a,b)=>a.t-b.t);
+ $('#tl').innerHTML=a.length?a.map((x,i)=>`<div class="mem"><div class="av" style="background:${cols[(i+3)%cols.length]}">👩‍🏫</div><div><h4>${esc(x.n)} ${x.s?`<small>· ${esc(x.s)}</small>`:''}</h4>${x.x?`<p>“${esc(x.x)}”</p>`:''}${x.by?`<small>ചേർത്തത്: ${esc(x.by)}</small>`:''}</div></div>`).join(''):'<div class="empty">ആദ്യത്തെ ടീച്ചറെ ചേർക്ക്.</div>'}
+$('#tf').onsubmit=async e=>{e.preventDefault();const v={n:$('#tn').value.trim(),t:Date.now()};const sb=$('#ts').value.trim(),x=$('#tx').value.trim();if(sb)v.s=sb;if(x)v.x=x;if(me())v.by=me().slice(0,40);
+ try{await put(`tc/${cur}/${uid()}`,v);$('#tf').reset();loadTc();toast('ചേർത്തു 🙏')}catch(e){toast('എന്തോ പ്രശ്നം')}};
+addEventListener('hashchange',route);route();
+</script>
+</body>
+</html>
