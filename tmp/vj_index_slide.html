@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Vijaya Jewellery – Live Gold Rates</title>
+    <meta name="description" content="Today's live gold rates per gram in AED at Vijaya Jewellery, Dubai and Sharjah." />
+    <meta name="theme-color" content="#0b0906" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Vijaya Gold" />
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/44jM8mC2/Untitled-design-20260603-150241-0000.png" />
+    <link rel="icon" href="https://i.postimg.cc/44jM8mC2/Untitled-design-20260603-150241-0000.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600&display=swap"
+    />
+    <link rel="stylesheet" href="hark.css" />
+    <link rel="stylesheet" href="hark-hero.css" />
+    <style>
+      :root {
+        --x-bg: #0b0906;
+        --x-card: #17130d;
+        --x-card-2: #1f1910;
+        --x-line: rgba(212, 175, 55, 0.22);
+        --x-gold: #d4af37;
+        --x-gold-hi: #f3d98b;
+        --x-gold-grad: #e3c15a linear-gradient(135deg, #f6e3a1 0%, #e0bd52 50%, #c9a03a 100%);
+        --x-text: #f5efe1;
+        --x-muted: #b5aa93;
+        --x-up: #4cd38a;
+        --x-down: #ff6b6b;
+        --x-serif: "Playfair Display", Georgia, serif;
+        --x-sans: "Poppins", var(--sans), system-ui, sans-serif;
+      }
+      html, body { background: var(--x-bg); }
+      body { color: var(--x-text); font-family: var(--x-sans); -webkit-tap-highlight-color: transparent; }
+      html, body { overflow-x: hidden; }
+      .x-app {
+        width: 100%; max-width: 440px; margin: 0 auto; min-width: 0;
+        padding: max(14px, env(safe-area-inset-top)) 0 calc(96px + env(safe-area-inset-bottom));
+        display: grid; gap: 18px;
+        background: radial-gradient(120% 50% at 50% 0%, rgba(212, 175, 55, 0.14), transparent 70%);
+        min-height: 100vh;
+      }
+      .x-pull { height: 0; overflow: hidden; text-align: center; font-size: 12px; color: var(--x-muted); transition: height var(--dur-quick) var(--ease-out); }
+      /* header */
+      .x-head { text-align: center; display: grid; justify-items: center; gap: 4px; }
+      .x-logo { width: 150px; height: auto; max-height: 96px; object-fit: contain; }
+      .x-head h1 { font-family: var(--x-serif); font-size: 26px; line-height: 1.2; font-weight: 700; margin: 6px 0 0;
+        color: var(--x-gold-hi); text-shadow: 0 1px 18px rgba(212, 175, 55, .35); }
+      .x-now { font-size: 13px; color: var(--x-muted); margin: 0; font-variant-numeric: tabular-nums; }
+      .x-live { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--x-gold-hi); }
+      .x-live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--x-up); box-shadow: 0 0 0 0 rgba(76, 211, 138, .6); animation: x-ping 2s infinite; }
+      .x-live.is-stale::before { background: var(--x-muted); animation: none; }
+      @keyframes x-ping { 70% { box-shadow: 0 0 0 8px rgba(76, 211, 138, 0); } 100% { box-shadow: 0 0 0 0 rgba(76, 211, 138, 0); } }
+      /* status row */
+      .x-status { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--x-muted); }
+      .x-tag { border: 1px solid var(--x-line); border-radius: var(--r-pill); padding: 2px 8px; color: var(--x-gold-hi); font-size: 12px; margin-left: 6px; }
+      .x-refresh { display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap); padding: 0 14px; border-radius: var(--r-pill);
+        border: 1px solid var(--x-line); background: var(--x-card); color: var(--x-gold-hi); font: 500 13px var(--x-sans); cursor: pointer; }
+      .x-spin { width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; }
+      .is-loading .x-spin { animation: x-rot .8s linear infinite; }
+      @keyframes x-rot { to { transform: rotate(360deg); } }
+      /* rates */
+      .x-rates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .x-rate { position: relative; background: linear-gradient(160deg, var(--x-card-2), var(--x-card)); border: 1px solid var(--x-line);
+        border-radius: var(--r-m); padding: 14px 14px 12px; display: grid; gap: 2px; overflow: hidden;
+        animation: x-rise .5s var(--ease-out) both; }
+      .x-rate:nth-child(2) { animation-delay: .06s; } .x-rate:nth-child(3) { animation-delay: .12s; } .x-rate:nth-child(4) { animation-delay: .18s; }
+      @keyframes x-rise { from { opacity: 0; transform: translateY(10px); } }
+      .x-rate.is-pop { border-color: var(--x-gold); box-shadow: 0 0 0 1px rgba(212, 175, 55, .35), 0 10px 30px -12px rgba(212, 175, 55, .45); }
+      .x-rate__k { font-size: 13px; color: var(--x-gold-hi); font-weight: 500; display: flex; justify-content: space-between; align-items: center; gap: 4px; }
+      .x-badge { font-size: 12px; line-height: 1; padding: 4px 7px; border-radius: var(--r-pill); background: var(--x-gold-grad); color: #1a1408; font-weight: 600; }
+      .x-rate__p { font-size: clamp(20px, 6vw, 26px); font-weight: 600; line-height: 1.2; font-variant-numeric: tabular-nums; white-space: nowrap; transition: color .3s; }
+      .x-rate__p small { font-size: 13px; font-weight: 500; color: var(--x-muted); margin-right: 3px; }
+      .x-rate__u { font-size: 12px; color: var(--x-muted); display: flex; justify-content: space-between; }
+      .x-arrow { font-weight: 700; opacity: 1; color: var(--x-muted); transition: color .3s; }
+      .x-arrow.up { color: var(--x-up); } .x-arrow.down { color: var(--x-down); }
+      .x-rate.is-up .x-rate__p, .x-rate.is-up .x-arrow { color: var(--x-up); opacity: 1; }
+      .x-rate.is-down .x-rate__p, .x-rate.is-down .x-arrow { color: var(--x-down); opacity: 1; }
+      .x-rate.is-up { animation: x-flash-up 2.4s; } .x-rate.is-down { animation: x-flash-dn 2.4s; }
+      @keyframes x-flash-up { 0%, 40% { background: rgba(76, 211, 138, .16); } }
+      @keyframes x-flash-dn { 0%, 40% { background: rgba(255, 107, 107, .16); } }
+      /* panels */
+      .x-panel { background: var(--x-card); border: 1px solid var(--x-line); border-radius: var(--r-l); padding: 16px; display: grid; gap: 12px; }
+      .x-h2 { font-family: var(--x-serif); font-size: 20px; font-weight: 600; margin: 0; color: var(--x-text); }
+      .x-seg { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+      .x-seg button { min-height: var(--tap); border-radius: var(--r-s); border: 1px solid var(--x-line); background: var(--x-bg); color: var(--x-text); font: 500 14px var(--x-sans); cursor: pointer; transition: background var(--dur-quick); }
+      .x-seg button[aria-pressed="true"] { background: var(--x-gold-grad); color: #1a1408; border-color: transparent; }
+      .x-field { display: flex; align-items: center; gap: 8px; border: 1px solid var(--x-line); border-radius: var(--r-s); padding: 0 14px; background: var(--x-bg); }
+      .x-field input { flex: 1; min-width: 0; min-height: 48px; background: none; border: 0; outline: 0; color: var(--x-text); font: 500 18px var(--x-sans); }
+      .x-field:focus-within { border-color: var(--x-gold); }
+      .x-field span { color: var(--x-muted); font-size: 14px; }
+      .x-result { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+      .x-result span { font-size: 13px; color: var(--x-muted); }
+      .x-result strong { font-size: 24px; font-weight: 600; color: var(--x-gold-hi); font-variant-numeric: tabular-nums; }
+      .x-note { font-size: 12px; color: var(--x-muted); margin: 0; }
+      /* ticker */
+      .x-ticker { position: relative; overflow: hidden; border-block: 1px solid var(--x-line); background: linear-gradient(90deg, rgba(212,175,55,.12), rgba(212,175,55,.04), rgba(212,175,55,.12)); border-radius: var(--r-s); border-inline: 1px solid var(--x-line); height: 44px; contain: paint; }
+      .x-ticker__t { position: absolute; top: 0; left: 0; white-space: nowrap; line-height: 44px; font-size: 15px; color: var(--x-gold-hi); unicode-bidi: isolate; will-change: transform; }
+      .x-ticker__t.is-run { animation: x-marquee var(--x-dur, 20s) linear 1 forwards; }
+      @keyframes x-marquee { from { transform: translateX(var(--x-from)); } to { transform: translateX(var(--x-to)); } }
+      /* collections */
+      .x-banner { margin: 0; border-radius: var(--r-l); overflow: hidden; aspect-ratio: 16 / 9; background: var(--x-card); border: 1px solid var(--x-line); }
+      .x-banner img, .x-col img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .x-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+      .x-col { position: relative; display: block; border-radius: var(--r-m); overflow: hidden; aspect-ratio: 3 / 4; border: 1px solid var(--x-line); background: var(--x-card); color: var(--x-text); text-decoration: none; transition: transform var(--dur-quick) var(--ease-out); }
+      .x-col:active { transform: scale(.97); }
+      .x-col span { position: absolute; inset: auto 0 0; padding: 22px 8px 8px; font-size: 13px; font-weight: 500; text-align: center; background: linear-gradient(transparent, rgba(0,0,0,.85)); }
+      .x-hl { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+      .x-hl li { font-size: 12px; padding: 5px 10px; border-radius: var(--r-pill); border: 1px solid var(--x-line); color: var(--x-text); }
+      /* showrooms */
+      .x-shops { display: grid; gap: 10px; }
+      .x-shop { background: var(--x-card); border: 1px solid var(--x-line); border-radius: var(--r-l); padding: 16px; display: grid; gap: 4px; }
+      .x-shop__city { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--x-gold); margin: 0; }
+      .x-shop h3 { font-size: 17px; font-weight: 600; margin: 0; }
+      .x-shop p { margin: 0; font-size: 14px; color: var(--x-muted); }
+      .x-btns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+      .x-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: var(--tap); border-radius: var(--r-pill); font: 500 14px var(--x-sans); text-decoration: none; cursor: pointer; border: 1px solid var(--x-line); color: var(--x-gold-hi); background: transparent; }
+      .x-btn--gold { background: var(--x-gold-grad); color: #1a1408; border-color: transparent; }
+      .x-foot { text-align: center; font-size: 12px; color: var(--x-muted); margin: 0; }
+      /* bottom bar + sheet */
+      .x-bar { position: fixed; z-index: 20; left: 50%; transform: translateX(-50%); bottom: 0; width: 100%; max-width: 440px;
+        padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+        background: rgba(11, 9, 6, .82); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border-top: 1px solid var(--x-line); }
+      .x-bar .x-btn { min-height: 48px; font-size: 15px; }
+      .x-sheet { position: fixed; inset: 0; z-index: 30; display: grid; align-items: end; justify-items: center; background: rgba(0,0,0,.55); opacity: 0; pointer-events: none; transition: opacity var(--dur-quick); }
+      .x-sheet.is-open { opacity: 1; pointer-events: auto; }
+      .x-sheet__card { width: 100%; max-width: 440px; background: var(--x-card-2); border: 1px solid var(--x-line); border-radius: var(--r-l) var(--r-l) 0 0; padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); display: grid; gap: 10px; transform: translateY(100%); transition: transform .3s var(--ease-out); }
+      .x-sheet.is-open .x-sheet__card { transform: none; }
+      .x-sheet__card .x-btn { min-height: 52px; justify-content: space-between; padding: 0 18px; }
+      .x-toast { position: fixed; z-index: 40; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom)); transform: translate(-50%, 10px); background: var(--x-text); color: #1a1408; font-size: 13px; padding: 10px 16px; border-radius: var(--r-pill); opacity: 0; transition: .25s; pointer-events: none; max-width: 90vw; }
+      .x-toast.is-show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+      .x-toast a { color: inherit; font-weight: 600; }
+      @media (prefers-reduced-motion: reduce) { .x-rate, .x-live::before { animation: none !important; } }
+    </style>
+  <style id="apk-fit">
+html,body{margin:0;padding:0;width:100%;max-width:100vw;overflow-x:hidden}
+.x-app{grid-template-columns:minmax(0,1fr)!important;padding-left:14px!important;padding-right:14px!important;box-sizing:border-box!important;max-width:min(440px,100vw)!important}
+.x-app>*{min-width:0!important;max-width:100%!important;margin-left:0!important;margin-right:0!important}
+.x-bar{max-width:min(440px,100vw)!important;box-sizing:border-box}
+.x-panel,.x-shop,.x-shops,.x-rates,.x-cols,.x-seg,.x-btns,.x-app section{min-width:0!important;max-width:100%!important}
+.x-panel,.x-shop,.x-shops{grid-template-columns:minmax(0,1fr)!important}
+.x-panel>*,.x-shop>*,.x-shops>*,.x-rates>*,.x-cols>*,.x-seg>*,.x-btns>*{min-width:0!important;max-width:100%!important}
+.x-field input{width:100%!important;min-width:0!important}
+.x-seg button{padding-left:0!important;padding-right:0!important}
+.x-result{flex-wrap:wrap}
+.x-result strong{font-size:22px}
+img{max-width:100%}
+.x-mk{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:8px;min-width:0}
+.x-seg2{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.x-bd{display:grid;gap:6px;padding:10px 0;border-top:1px solid var(--x-line);border-bottom:1px solid var(--x-line);min-width:0}
+.x-bd div{display:flex;justify-content:space-between;gap:8px;font-size:14px}
+.x-bd span{color:var(--x-muted)}
+.x-bd b{font-weight:500;font-variant-numeric:tabular-nums}
+</style>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#14060a">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Vijaya Gold">
+<style id="vj-theme">
+:root{--x-bg:#0d0507;--x-card:rgba(38,14,20,.72);--x-card-2:rgba(52,20,28,.85);--x-line:rgba(232,193,106,.28);--x-gold:#e8c16a;--x-gold-hi:#f8e3a8;--x-text:#fbf4e6;--x-muted:#c9b59a;--x-gold-grad:#e3c15a linear-gradient(135deg,#fff1c1 0%,#ecc764 45%,#b8862b 100%)}
+html,body{background:#0d0507}
+body{background:
+ radial-gradient(90% 45% at 50% -5%,rgba(232,193,106,.30),transparent 65%),
+ radial-gradient(70% 40% at 100% 35%,rgba(128,22,46,.55),transparent 70%),
+ radial-gradient(70% 40% at 0% 70%,rgba(110,18,40,.50),transparent 70%),
+ linear-gradient(180deg,#1c070d 0%,#12050a 45%,#0a0406 100%) fixed!important;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.07;
+ background-image:radial-gradient(circle at 1px 1px,#f8e3a8 1px,transparent 1.4px);background-size:22px 22px}
+.x-app{position:relative;z-index:1;background:none!important}
+.x-head h1{background:linear-gradient(180deg,#fff4cf,#e8c16a 60%,#b8862b);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;letter-spacing:.02em}
+.x-head h1::after{content:"";display:block;width:90px;height:2px;margin:8px auto 0;background:linear-gradient(90deg,transparent,#e8c16a,transparent)}
+.x-rate,.x-panel,.x-shop{background:linear-gradient(160deg,rgba(64,24,34,.78),rgba(26,9,14,.82))!important;border:1px solid var(--x-line);box-shadow:0 12px 30px -16px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,236,190,.08);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.x-rate.is-pop{border-color:#e8c16a;box-shadow:0 0 0 1px rgba(232,193,106,.45),0 14px 34px -14px rgba(232,193,106,.5)}
+.x-rate__p span{color:#fff6dc}
+.x-refresh{background:rgba(64,24,34,.7)}
+.x-bar{background:rgba(20,6,10,.85)!important}
+.x-ticker{background:linear-gradient(90deg,rgba(128,22,46,.45),rgba(232,193,106,.14),rgba(128,22,46,.45))!important}
+/* calculator */
+.x-calc{position:relative;overflow:hidden;border:1px solid rgba(232,193,106,.5)!important;padding:18px!important;gap:14px!important;
+ background:radial-gradient(120% 70% at 100% 0%,rgba(232,193,106,.18),transparent 60%),linear-gradient(165deg,#3a1220,#1a070d)!important;
+ box-shadow:0 18px 40px -18px rgba(0,0,0,.9),0 0 0 1px rgba(232,193,106,.12),inset 0 1px 0 rgba(255,236,190,.15)!important}
+.x-calc::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#b8862b,#fff1c1,#b8862b)}
+.x-calc-head{display:flex;align-items:center;gap:12px}
+.x-calc-ico{width:44px;height:44px;flex:none;display:grid;place-items:center;border-radius:14px;font-size:22px;background:var(--x-gold-grad);box-shadow:0 6px 16px -6px rgba(232,193,106,.7)}
+.x-calc .x-h2{color:var(--x-gold-hi)}
+.x-calc-sub{margin:2px 0 0;font-size:12px;color:var(--x-muted)}
+.x-calc .x-seg{background:rgba(0,0,0,.3);padding:4px;border-radius:14px;border:1px solid var(--x-line)}
+.x-calc .x-seg button{border:0;background:transparent;color:var(--x-muted);font-weight:600;border-radius:10px;transition:.2s}
+.x-calc .x-seg button[aria-pressed="true"]{background:var(--x-gold-grad);color:#2a1606;box-shadow:0 4px 12px -4px rgba(232,193,106,.8)}
+.x-calc .x-field{background:rgba(0,0,0,.35);border:1px solid var(--x-line);border-radius:14px}
+.x-calc .x-field:focus-within{border-color:#e8c16a;box-shadow:0 0 0 3px rgba(232,193,106,.18)}
+.x-calc .x-field input{color:#fff6dc;font-size:20px}
+.x-calc .x-field span{color:var(--x-gold);font-weight:500}
+.x-calc .x-bd{border:0;background:rgba(0,0,0,.28);border-radius:14px;padding:12px 14px}
+.x-calc .x-bd b{color:#fbf4e6}
+.x-calc .x-result{background:var(--x-gold-grad);border-radius:16px;padding:14px 16px;align-items:center;box-shadow:0 10px 24px -10px rgba(232,193,106,.75)}
+.x-calc .x-result span{color:#4a2a08;font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.x-calc .x-result strong{color:#2a1606;font-size:26px!important;font-weight:700}
+.x-calc .x-note{text-align:center}
+.x-mkrow{display:flex;gap:8px;align-items:stretch}
+.x-mkrow .x-field{flex:1;min-width:0}
+.x-mkmode{display:flex;flex:none;background:rgba(0,0,0,.3);padding:4px;border-radius:14px;border:1px solid var(--x-line)}
+.x-mkmode button{border:0;background:transparent;color:var(--x-muted);font:600 14px var(--x-sans);border-radius:10px;padding:0 12px;min-width:44px;cursor:pointer;transition:.2s}
+.x-mkmode button[aria-pressed="true"]{background:var(--x-gold-grad);color:#2a1606;box-shadow:0 4px 12px -4px rgba(232,193,106,.8)}
+@media (min-width:900px){
+ html body .x-app{max-width:1140px!important;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)!important;column-gap:24px!important;row-gap:22px!important;
+  padding:28px 32px calc(110px + env(safe-area-inset-bottom))!important;align-items:start}
+ html body .x-app>.x-pull,html body .x-app>.x-head,html body .x-app>.x-status,html body .x-app>.x-ticker,html body .x-app>.x-foot{grid-column:1/-1}
+ html body .x-app>.x-rates{grid-column:1}
+ html body .x-app>.x-calc{grid-column:2}
+ html body .x-app>section[aria-label="Collections"]{grid-column:1}
+ html body .x-app>.x-shops{grid-column:2}
+ .x-head h1{font-size:38px}
+ .x-logo{width:190px;max-height:120px}
+ .x-rate{padding:20px!important}
+ .x-rate__p{font-size:30px!important}
+ .x-cols{gap:12px}
+ .x-shops{grid-template-columns:minmax(0,1fr)!important}
+ html body .x-bar{max-width:1140px!important;left:50%;border-radius:20px 20px 0 0;grid-template-columns:1fr 1fr;padding-left:32px;padding-right:32px}
+ html body .x-bar .x-btn{max-width:none}
+ .x-sheet__card{max-width:480px;border-radius:24px;margin-bottom:40px}
+}
+@media (min-width:1200px){html body .x-app>.x-rates{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<!--/vj-theme-->
+<style id="vj-new">
+.x-offer{display:none;position:relative;overflow:hidden;border-radius:18px;border:1px solid rgba(232,193,106,.55);background:linear-gradient(135deg,#5a0f22,#80162e 55%,#3a0a16);box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.x-offer.is-on{display:block}
+.x-offer img{display:block;width:100%;max-height:260px;object-fit:cover}
+.x-offer__b{padding:14px 16px;display:grid;gap:6px}
+.x-offer__tag{justify-self:start;font:700 11px Poppins,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#1a1200;background:linear-gradient(135deg,#f7d774,#c9962b);border-radius:20px;padding:4px 10px}
+.x-offer h2{margin:0;font:700 19px Poppins,sans-serif;color:#f7d774}
+.x-offer p{margin:0;color:#f4e9d8;font-size:14px;line-height:1.45;white-space:pre-line}
+.x-offer__end{font-size:12px!important;color:#e8c16a!important;opacity:.9}
+.x-offer__wa{justify-self:start;margin-top:4px;text-decoration:none;font:700 14px Poppins,sans-serif;color:#1a1200;background:linear-gradient(135deg,#f7d774,#c9962b);border-radius:24px;padding:9px 18px}
+.x-alert{display:grid;gap:10px}
+.x-alert__row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.x-alert select,.x-alert input{width:100%;min-height:48px;border-radius:12px;border:1px solid rgba(232,193,106,.45);background:rgba(0,0,0,.25);color:#f7e7c6;font:600 15px Poppins,sans-serif;padding:0 12px}
+.x-alert__btn{min-height:50px;border:0;border-radius:14px;background:linear-gradient(135deg,#f7d774,#c9962b);color:#1a1200;font:700 15px Poppins,sans-serif;cursor:pointer}
+.x-alert__on{display:none;align-items:center;justify-content:space-between;gap:10px;border:1px solid rgba(232,193,106,.45);border-radius:14px;padding:10px 12px;color:#f7e7c6;font-size:14px}
+.x-alert__on.is-on{display:flex}
+.x-alert__on button{border:1px solid rgba(232,193,106,.6);background:transparent;color:#f7d774;border-radius:20px;padding:6px 14px;font:600 13px Poppins,sans-serif}
+.x-alert__hint{margin:0;font-size:12px;color:#d9c9a8;opacity:.85}
+</style>
+
+<!-- Google Analytics (GA4: Vijaya Jewellery Live Rate) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TKBQJ2QWFH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  (function(){
+    var isApk = !!window.VJ || location.protocol === "file:";
+    var cid; try { cid = localStorage.getItem("vj_ga_cid"); if (!cid) { cid = Math.floor(Math.random()*1e9) + "." + Math.floor(Date.now()/1000); localStorage.setItem("vj_ga_cid", cid); } } catch (e) {}
+    gtag("js", new Date());
+    var cfg = { app_platform: isApk ? "android_apk" : (matchMedia("(display-mode: standalone)").matches ? "installed_web_app" : "website") };
+    if (isApk) { cfg.client_storage = "none"; cfg.client_id = cid; cfg.page_location = "https://vijayajewelleryllc.web.app/?src=apk"; cfg.page_title = "Vijaya Gold Rates (Android app)"; }
+    gtag("config", "G-TKBQJ2QWFH", cfg);
+    gtag("set", "user_properties", { app_platform: cfg.app_platform });
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest("a,button"); if (!a) return;
+      var h = a.getAttribute("href") || "", ev = null, p = {};
+      if (h.indexOf("tel:") === 0) { ev = "call_click"; p.phone = h.slice(4); }
+      else if (h.indexOf("google.com/maps") > -1) { ev = "directions_click"; p.branch = h.indexOf("Sharjah") > -1 ? "sharjah" : "dubai"; }
+      else if (h.indexOf("wa.me") > -1) { ev = "whatsapp_click"; }
+      else if (a.id === "share") { ev = "share_rates"; }
+      else if (a.id === "vjInstall") { ev = "install_click"; }
+      if (ev) { p.app_platform = cfg.app_platform; gtag("event", ev, p); }
+    }, true);
+  })();
+</script>
+</head>
+  <body>
+    <div class="page" id="top">
+      <main class="x-app" id="app">
+        <div class="x-pull" id="pull" aria-hidden="true">Release to refresh</div>
+
+        <header class="x-head">
+          <img class="x-logo" src="https://i.postimg.cc/44jM8mC2/Untitled-design-20260603-150241-0000.png" alt="Vijaya Jewellery" />
+          <span class="x-live" id="live">Live</span>
+          <h1>Live Gold Rate</h1>
+          <p class="x-now" id="now"></p>
+        </header>
+
+        <div class="x-status">
+          <span><span id="updated">Loading rates…</span><span class="x-tag" id="stale" hidden>last known</span></span>
+          <button class="x-refresh" id="refresh" type="button"><span class="x-spin" aria-hidden="true"></span>Refresh</button>
+        </div>
+
+        <section class="x-rates" aria-label="Gold rates per gram in AED" aria-live="polite">
+          <div class="x-rate" data-k="24"><div class="x-rate__k">24K Gold</div><div class="x-rate__p"><small>AED</small><span>504.50</span></div><div class="x-rate__u">per gram<span class="x-arrow">● 0.00</span></div></div>
+          <div class="x-rate is-pop" data-k="22"><div class="x-rate__k">22K Gold <span class="x-badge">Popular</span></div><div class="x-rate__p"><small>AED</small><span>467.25</span></div><div class="x-rate__u">per gram<span class="x-arrow">● 0.00</span></div></div>
+          <div class="x-rate" data-k="21"><div class="x-rate__k">21K Gold</div><div class="x-rate__p"><small>AED</small><span>448.00</span></div><div class="x-rate__u">per gram<span class="x-arrow">● 0.00</span></div></div>
+          <div class="x-rate" data-k="18"><div class="x-rate__k">18K Gold</div><div class="x-rate__p"><small>AED</small><span>384.00</span></div><div class="x-rate__u">per gram<span class="x-arrow">● 0.00</span></div></div>
+        </section>
+
+
+        <section class="x-offer" id="offer" aria-label="Special offer">
+          <img id="offer-img" alt="" hidden />
+          <div class="x-offer__b">
+            <span class="x-offer__tag">Special offer</span>
+            <h2 id="offer-title"></h2>
+            <p id="offer-text"></p>
+            <p class="x-offer__end" id="offer-end" hidden></p>
+            <a class="x-offer__wa" id="offer-wa" target="_blank" rel="noopener" href="#">Enquire on WhatsApp</a>
+          </div>
+        </section>
+        <section class="x-panel x-calc" aria-label="Gold value calculator">
+          <div class="x-calc-head"><span class="x-calc-ico" aria-hidden="true">&#x1F9EE;</span><div><h2 class="x-h2">Gold calculator</h2><p class="x-calc-sub">Live rate &times; weight + making + VAT</p></div></div>
+          <div class="x-seg" role="group" aria-label="Karat" id="seg">
+            <button type="button" data-k="24" aria-pressed="false">24K</button>
+            <button type="button" data-k="22" aria-pressed="true">22K</button>
+            <button type="button" data-k="21" aria-pressed="false">21K</button>
+            <button type="button" data-k="18" aria-pressed="false">18K</button>
+          </div>
+          <label class="x-field"><input id="grams" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Enter grams" aria-label="Weight in grams" /><span>grams</span></label>
+          <div class="x-mkrow"><label class="x-field"><input id="mk" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Making charges" aria-label="Making charges percent" /><span id="mk-unit">% making</span></label><div class="x-mkmode" role="group" aria-label="Making charges type" id="mkmode"><button type="button" data-m="pct" aria-pressed="true">%</button><button type="button" data-m="aed" aria-pressed="false">AED</button></div></div>
+          <div class="x-bd">
+            <div><span>Gold value</span><b id="c-gold">AED 0.00</b></div>
+            <div><span>Making charges</span><b id="c-mk">AED 0.00</b></div>
+            <div><span id="c-vatl">VAT 5%</span><b id="c-vat">AED 0.00</b></div>
+          </div>
+          <div class="x-result"><span>Total payable</span><strong id="calc">AED 0.00</strong></div>
+          <p class="x-note" id="c-note">Includes 5% VAT on gold and making charges.</p>
+        </section>
+
+
+        <section class="x-panel x-alert" aria-label="Gold price alert">
+          <div class="x-calc-head"><span class="x-calc-ico" aria-hidden="true">&#x1F514;</span><div><h2 class="x-h2">Price alert</h2><p class="x-calc-sub">Get notified when gold reaches your price</p></div></div>
+          <div id="al-form" class="x-alert">
+            <div class="x-alert__row">
+              <select id="al-k" aria-label="Karat"><option value="24">24K</option><option value="22" selected>22K</option><option value="21">21K</option><option value="18">18K</option></select>
+              <select id="al-dir" aria-label="When"><option value="below">Drops to</option><option value="above">Rises to</option></select>
+            </div>
+            <input id="al-p" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Target price (AED per gram)" aria-label="Target price" />
+            <button class="x-alert__btn" id="al-set" type="button">&#x1F514; Set alert</button>
+          </div>
+          <div class="x-alert__on" id="al-on"><span id="al-desc"></span><button type="button" id="al-del">Remove</button></div>
+          <p class="x-alert__hint">Install the app and allow notifications. The app checks the rate every minute while open, and in the background from time to time.</p>
+        </section>
+        <section class="x-panel x-alert" aria-label="Rate change tone">
+          <div class="x-calc-head"><span class="x-calc-ico" aria-hidden="true">&#x1F3B5;</span><div><h2 class="x-h2">Rate change tone</h2><p class="x-calc-sub">Play a sound when the gold rate changes</p></div></div>
+          <div class="x-alert__row">
+            <select id="tn-sel" aria-label="Tone"><option value="bell">&#x1F514; Bell</option><option value="chime">&#x1F3B6; Chime</option><option value="coin">&#x1FA99; Coin</option><option value="temple">&#x1F6D5; Temple bell</option></select>
+            <button class="x-alert__btn" id="tn-test" type="button" style="min-height:48px">&#9654; Test</button>
+          </div>
+          <button class="x-alert__btn" id="tn-on" type="button">&#x1F50A; Turn on tone</button>
+          <p class="x-alert__hint" id="tn-hint">Plays while the app is open. When it's closed you'll get a notification with your phone's normal sound.</p>
+        </section>
+        <div class="x-ticker" aria-label="Welcome messages"><span class="x-ticker__t" id="tick">Welcome to Vijaya Jewellery</span></div>
+
+        <section aria-label="Collections" style="display: grid; gap: 10px">
+          <h2 class="x-h2">Our collections</h2>
+          <figure class="x-banner"><img id="img-hero" src="https://i.postimg.cc/G35Q6R9T/7846facba034eff656ee4beae2d3f9e8.jpg" alt="Vijaya Jewellery gold collection" /></figure>
+          <div class="x-cols">
+            <a class="x-col" href="https://i.postimg.cc/PrLFBm9h/IMG-20260423-WA0051.jpg" target="_blank" rel="noopener" id="lnk-bangl"><img id="img-bangl" src="https://i.postimg.cc/PrLFBm9h/IMG-20260423-WA0051.jpg" alt="Gold bangles" loading="lazy" /><span>Bangles</span></a>
+            <a class="x-col" href="https://i.postimg.cc/T1kMCfyT/IMG-20260419-WA0083.jpg" target="_blank" rel="noopener" id="lnk-neck"><img id="img-neck" src="https://i.postimg.cc/T1kMCfyT/IMG-20260419-WA0083.jpg" alt="Gold necklaces" loading="lazy" /><span>Necklaces</span></a>
+            <a class="x-col" href="https://i.postimg.cc/sxJDzkvh/IMG-20260422-WA0041.jpg" target="_blank" rel="noopener" id="lnk-ring"><img id="img-ring" src="https://i.postimg.cc/sxJDzkvh/IMG-20260422-WA0041.jpg" alt="Gold rings" loading="lazy" /><span>Rings</span></a>
+          </div>
+          <ul class="x-hl">
+            <li>100% certified pure gold</li><li>Bridal sets</li><li>Turkish designs</li><li>Lightweight daily wear</li><li>Custom designs</li><li>Best old gold exchange value</li>
+          </ul>
+        </section>
+
+        <section class="x-shops" aria-label="Showrooms">
+          <h2 class="x-h2">Visit our showrooms</h2>
+          <article class="x-shop">
+            <p class="x-shop__city">Dubai</p>
+            <h3>Gold Centre, Deira</h3>
+            <p>04 226 4635</p>
+            <div class="x-btns">
+              <a class="x-btn x-btn--gold" href="tel:+97142264635">Call</a>
+              <a class="x-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=Vijaya%20Jewellery%20LLC%2C%20Al%20Khor%20St%2C%20Al%20Ras%2C%20Dubai&amp;destination_place_id=ChIJ6Rkki0NDXz4RDhdlzA9abMg&amp;travelmode=driving" target="_blank" rel="noopener">Directions</a>
+            </div>
+          </article>
+          <article class="x-shop">
+            <p class="x-shop__city">Sharjah</p>
+            <h3>Sharjah Shopping Centre, Rolla</h3>
+            <p>06 561 3815</p>
+            <div class="x-btns">
+              <a class="x-btn x-btn--gold" href="tel:+97165613815">Call</a>
+              <a class="x-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=Sharjah%20Shopping%20Centre%2C%20Al%20Arouba%20St%2C%20Sharjah&amp;destination_place_id=ChIJ61jf5jNaXz4RQpcso8iXAIc&amp;travelmode=driving" target="_blank" rel="noopener">Directions</a>
+            </div>
+          </article>
+        </section>
+
+        <p class="x-foot">Rates are per gram in AED and may change during the day. ▲ ▼ shows the change from yesterday.</p>
+      </main>
+
+      <nav class="x-bar" aria-label="Quick actions">
+        <button class="x-btn" id="share" type="button">Share rates</button>
+        <button class="x-btn x-btn--gold" id="call" type="button">Call</button>
+      </nav>
+
+      <div class="x-sheet" id="sheet" aria-hidden="true">
+        <div class="x-sheet__card" role="dialog" aria-label="Choose a showroom to call">
+          <h2 class="x-h2">Call a showroom</h2>
+          <a class="x-btn x-btn--gold" href="tel:+97142264635">Dubai · Gold Centre <span>04 226 4635</span></a>
+          <a class="x-btn x-btn--gold" href="tel:+97165613815">Sharjah · Rolla <span>06 561 3815</span></a>
+          <button class="x-btn" type="button" id="sheet-close">Cancel</button>
+        </div>
+      </div>
+      <div class="x-toast" id="toast" role="status"></div>
+    </div>
+    <script src="hark.js"></script>
+    <script>
+      (function () {
+        var ID = "1cNNoUxhpX8-uuZR-pA5q9V6rvkDFKcsG-L_awQLBrRM";
+        var BASE = "https://docs.google.com/spreadsheets/d/" + ID + "/gviz/tq?tqx=out:json";
+        var FALLBACK = { 24: 504.5, 22: 467.25, 21: 448, 18: 384 };
+        var KS = ["24", "22", "21", "18"];
+        var rates = Object.assign({}, FALLBACK), shown = {}, karat = "22", loading = false, seq = 0, everLoaded = false;
+        var $ = function (id) { return document.getElementById(id); };
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        function fmt(n) { return Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+        function dubai(opts) { return new Intl.DateTimeFormat("en-GB", Object.assign({ timeZone: "Asia/Dubai" }, opts)).format(new Date()); }
+        function clock() {
+          var d = dubai({ day: "2-digit", month: "short", year: "numeric" });
+          var t = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Dubai", hour: "2-digit", minute: "2-digit", hour12: true }).format(new Date());
+          $("now").textContent = d + " • " + t;
+        }
+        clock(); setInterval(clock, 15000);
+
+        /* ---------- rendering ---------- */
+        var HKEY = "vjRateHist", yest = {};
+        var hist = {}; try { hist = JSON.parse(localStorage.getItem(HKEY) || "{}") || {}; } catch (e) { hist = {}; }
+        function track(k, v) {
+          var h = hist[k];
+          if (!h) { hist[k] = { cur: v, prev: null }; return; }
+          if (h.cur !== v) { h.prev = h.cur; h.cur = v; }
+        }
+        function render(flash) {
+          KS.forEach(function (k) {
+            var card = document.querySelector('.x-rate[data-k="' + k + '"]');
+            var v = rates[k], prev = shown[k];
+            card.querySelector(".x-rate__p span").textContent = fmt(v);
+            if (flash) track(k, v);
+            var h = hist[k], ar = card.querySelector(".x-arrow");
+            ar.classList.remove("up", "down");
+            var base = yest[k] != null ? yest[k] : (h && h.cur === v ? h.prev : null);
+            if (base != null && base !== v) {
+              var upd = v > base;
+              ar.textContent = upd ? "\u25B2 +" + fmt(v - base) : "\u25BC -" + fmt(base - v);
+              ar.classList.add(upd ? "up" : "down");
+            } else { ar.textContent = "\u25CF 0.00"; }
+            if (flash && prev != null && v !== prev) {
+              var up = v > prev;
+              card.classList.remove("is-up", "is-down"); void card.offsetWidth;
+              card.classList.add(up ? "is-up" : "is-down");
+              setTimeout(function () { card.classList.remove("is-up", "is-down"); }, 2600);
+            }
+            shown[k] = v;
+          });
+          if (flash) { try { localStorage.setItem(HKEY, JSON.stringify(hist)); } catch (e) {} }
+          calc();
+        }
+        function calc() {
+          var g = parseFloat($("grams").value) || 0;
+          var m = parseFloat($("mk").value) || 0;
+          var gold = g * rates[karat];
+          var mk = mkMode === "aed" ? m : gold * m / 100;
+          var is24 = karat === "24";
+          var vat = is24 ? mk * 0.05 : (gold + mk) * 0.05;
+          $("c-gold").textContent = "AED " + fmt(gold);
+          $("c-mk").textContent = "AED " + fmt(mk) + (m && mkMode === "pct" ? " (" + m + "%)" : (m && gold ? " (" + (mk / gold * 100).toFixed(2) + "%)" : ""));
+          $("c-vatl").textContent = is24 ? "VAT 5% on making" : "VAT 5%";
+          $("c-vat").textContent = "AED " + fmt(vat);
+          $("calc").textContent = "AED " + fmt(gold + mk + vat);
+          $("c-note").textContent = is24 ? "24K: 5% VAT on making charges only." : "Includes 5% VAT on gold and making charges.";
+        }
+        $("grams").addEventListener("input", calc);
+        $("mk").addEventListener("input", calc);
+        var mkMode = "pct";
+        try { if (localStorage.getItem("vj_mkmode") === "aed") mkMode = "aed"; } catch (e) {}
+        function setMkMode(m) {
+          mkMode = m;
+          $("mkmode").querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x.dataset.m === m ? "true" : "false"); });
+          $("mk-unit").textContent = m === "aed" ? "AED making" : "% making";
+          $("mk").placeholder = m === "aed" ? "Total making amount" : "Making charges";
+          $("mk").setAttribute("aria-label", m === "aed" ? "Total making charges in AED" : "Making charges percent");
+          try { localStorage.setItem("vj_mkmode", m); } catch (e) {}
+          calc();
+        }
+        $("mkmode").addEventListener("click", function (e) {
+          var b = e.target.closest("button"); if (!b || b.dataset.m === mkMode) return;
+          $("mk").value = ""; setMkMode(b.dataset.m); $("mk").focus();
+        });
+        setMkMode(mkMode);
+        $("seg").addEventListener("click", function (e) {
+          var b = e.target.closest("button"); if (!b) return;
+          karat = b.dataset.k;
+          this.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+          calc();
+        });
+
+        /* ---------- loading: fetch first, JSONP fallback ---------- */
+        function parseGviz(text) { return JSON.parse(text.slice(text.indexOf("(") + 1, text.lastIndexOf(")"))); }
+        function jsonp(url, name) {
+          return new Promise(function (resolve, reject) {
+            var cb = name + "_" + (++seq), s = document.createElement("script");
+            var timer = setTimeout(function () { done(); reject(new Error("timeout")); }, 12000);
+            function done() { clearTimeout(timer); delete window[cb]; s.remove(); }
+            window[cb] = function (data) { done(); resolve(data); };
+            s.onerror = function () { done(); reject(new Error("jsonp")); };
+            s.src = url.replace("tqx=out:json", "tqx=out:json;responseHandler:" + cb) + "&_=" + Date.now();
+            document.head.appendChild(s);
+          });
+        }
+        function load(url, name) {
+          var f = window.fetch
+            ? fetch(url + "&_=" + Date.now()).then(function (r) { if (!r.ok) throw 0; return r.text(); }).then(parseGviz)
+            : Promise.reject();
+          return f.then(function (d) { if (!d || !d.table) throw 0; return d; }).catch(function () { return jsonp(url, name); });
+        }
+        function cell(row, i) { var c = row.c && row.c[i]; return c ? (c.v != null ? String(c.v) : c.f || "") : ""; }
+
+        function applySheet1(data) {
+          var got = {}, n = 0; offerData = {};
+          data.table.rows.forEach(function (r) {
+            var a = cell(r, 0).toUpperCase().trim(), b = cell(r, 1).trim();
+            if (a.indexOf("OFFER") === 0) { offerData[a] = b; return; }
+            var img = { HERO_IMG: "hero", BANGL_IMG: "bangl", NECK_IMG: "neck", RING_IMG: "ring" }[a];
+            if (img && /^https?:\/\//.test(b)) {
+              var el = $("img-" + img); if (el.getAttribute("src") !== b) el.src = b;
+              var ln = $("lnk-" + img); if (ln) ln.href = b;
+              return;
+            }
+            if (a.indexOf("GOLD") === -1 && !/\d\d\s*K/.test(a)) return;
+            KS.forEach(function (k) {
+              if (a.indexOf(k) !== -1) {
+                var p = parseFloat(b.replace(/AED/i, "").replace(/,/g, "").trim());
+                if (!isNaN(p) && p > 0) { got[k] = p; n++; }
+                var y = parseFloat(cell(r, 2).replace(/AED/i, "").replace(/,/g, "").trim());
+                if (!isNaN(y) && y > 0) yest[k] = y; else delete yest[k];
+              }
+            });
+          });
+          if (!n) throw new Error("no rates");
+          Object.assign(rates, got);
+          showOffer();
+        }
+
+        /* ---------- offer banner (Sheet1 rows: OFFER_TITLE, OFFER_TEXT, OFFER_IMG, OFFER_END) ---------- */
+        var offerData = {};
+        function showOffer() {
+          var t = (offerData.OFFER_TITLE || "").trim(), x = (offerData.OFFER_TEXT || offerData.OFFER || "").trim();
+          var im = (offerData.OFFER_IMG || "").trim(), end = (offerData.OFFER_END || "").trim();
+          var box = $("offer");
+          var gd = end.match(/^Date\((\d+),(\d+),(\d+)/); if (gd) end = ("0" + gd[3]).slice(-2) + "/" + ("0" + (+gd[2] + 1)).slice(-2) + "/" + gd[1];
+          var expired = false;
+          if (end) { var m = end.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/); var ed = m ? new Date(+m[3], +m[2] - 1, +m[1], 23, 59, 59) : new Date(end); if (!isNaN(ed) && ed < new Date()) expired = true; }
+          if ((!t && !x && !/^https?:/.test(im)) || expired) { box.classList.remove("is-on"); return; }
+          $("offer-title").textContent = t; $("offer-title").hidden = !t;
+          $("offer-text").textContent = x; $("offer-text").hidden = !x;
+          var ie = $("offer-img");
+          if (/^https?:\/\//.test(im)) { if (ie.getAttribute("src") !== im) ie.src = im; ie.alt = t || "Offer"; ie.hidden = false; } else ie.hidden = true;
+          $("offer-end").textContent = end ? "Offer valid till " + end : ""; $("offer-end").hidden = !end;
+          $("offer-wa").href = "https://wa.me/971562769519?text=" + encodeURIComponent("Hi Vijaya Jewellery, I'm interested in your offer" + (t ? ": " + t : ""));
+          box.classList.add("is-on");
+        }
+
+        /* ---------- price alert ---------- */
+        var AKEY = "vjAlert", alertCfg = null;
+        try { alertCfg = JSON.parse(localStorage.getItem(AKEY) || "null"); } catch (e) { alertCfg = null; }
+        function saveAlert() {
+          try { alertCfg ? localStorage.setItem(AKEY, JSON.stringify(alertCfg)) : localStorage.removeItem(AKEY); } catch (e) {}
+          if (window.caches) caches.open("vj-data").then(function (c) {
+            return alertCfg ? c.put("/__vj_alert", new Response(JSON.stringify(alertCfg), { headers: { "Content-Type": "application/json" } })) : c.delete("/__vj_alert");
+          }).catch(function () {});
+          showAlertUI();
+        }
+        function showAlertUI() {
+          var on = !!alertCfg;
+          $("al-form").style.display = on ? "none" : "grid";
+          $("al-on").classList.toggle("is-on", on);
+          if (on) $("al-desc").textContent = "\uD83D\uDD14 " + alertCfg.k + "K " + (alertCfg.dir === "below" ? "drops to" : "rises to") + " AED " + fmt(alertCfg.p);
+        }
+        function notify(title, body) {
+          toast("\uD83D\uDD14 " + body, 10000);
+          if (!("Notification" in window) || Notification.permission !== "granted") return;
+          var opt = { body: body, icon: "/icon-192.png", badge: "/icon-192.png", tag: "vj-alert", vibrate: [200, 100, 200] };
+          if (navigator.serviceWorker) navigator.serviceWorker.ready.then(function (r) { r.showNotification(title, opt); }).catch(function () { try { new Notification(title, opt); } catch (e) {} });
+          else { try { new Notification(title, opt); } catch (e) {} }
+        }
+        function checkAlert() {
+          if (!alertCfg) return;
+          var v = rates[alertCfg.k];
+          var hit = alertCfg.dir === "below" ? v <= alertCfg.p : v >= alertCfg.p;
+          if (!hit) return;
+          notify("Vijaya Jewellery \u2013 Gold price alert", alertCfg.k + "K gold is now AED " + fmt(v) + " per gram (your target: AED " + fmt(alertCfg.p) + ").");
+          alertCfg = null; saveAlert();
+        }
+        $("al-set").addEventListener("click", function () {
+          var p = parseFloat($("al-p").value);
+          if (!(p > 0)) { toast("Enter a target price in AED", 3000); $("al-p").focus(); return; }
+          var k = $("al-k").value, dir = $("al-dir").value, cur = rates[k];
+          if (dir === "below" && cur <= p) { toast(k + "K is already AED " + fmt(cur) + ". Choose a lower price.", 5000); return; }
+          if (dir === "above" && cur >= p) { toast(k + "K is already AED " + fmt(cur) + ". Choose a higher price.", 5000); return; }
+          alertCfg = { k: k, p: p, dir: dir, at: Date.now() };
+          saveAlert();
+          var ask = ("Notification" in window && Notification.permission === "default") ? Notification.requestPermission() : Promise.resolve();
+          Promise.resolve(ask).then(function () {
+            if ("Notification" in window && Notification.permission === "denied") toast("Alert set. Notifications are blocked, so you'll see it inside the app.", 6000);
+            else toast("\u2705 Alert set! We'll notify you when " + k + "K " + (dir === "below" ? "drops to" : "rises to") + " AED " + fmt(p), 5000);
+            if (navigator.serviceWorker) navigator.serviceWorker.ready.then(function (r) {
+              if (r.periodicSync) return navigator.permissions.query({ name: "periodic-background-sync" }).then(function (st) {
+                if (st.state === "granted") return r.periodicSync.register("vj-rate", { minInterval: 60 * 60 * 1000 });
+              });
+            }).catch(function () {});
+          });
+        });
+        $("al-del").addEventListener("click", function () { alertCfg = null; saveAlert(); toast("Alert removed", 2500); });
+        showAlertUI();
+
+
+        /* ---------- rate change tone ---------- */
+        var TKEY = "vjTone", tone = null, lastSeen = null, tAudio = null;
+        try { tone = JSON.parse(localStorage.getItem(TKEY) || "null"); } catch (e) { tone = null; }
+        try { lastSeen = JSON.parse(localStorage.getItem("vjLast") || "null"); } catch (e) { lastSeen = null; }
+        function playTone(n) {
+          n = n || (tone && tone.t) || "bell";
+          if (window.VJ && VJ.playTone) { try { VJ.playTone(n); return; } catch (e) {} }
+          try { tAudio = new Audio("tones/" + n + ".wav"); tAudio.play().catch(function () {}); } catch (e) {}
+        }
+        function saveTone() {
+          try { tone ? localStorage.setItem(TKEY, JSON.stringify(tone)) : localStorage.removeItem(TKEY); } catch (e) {}
+          if (window.VJ && VJ.setTone) { try { VJ.setTone(tone ? tone.t : ""); } catch (e) {} }
+          if ("caches" in window) caches.open("vj-data").then(function (c) {
+            return tone ? c.put("/__vj_tone", new Response(JSON.stringify(tone), { headers: { "Content-Type": "application/json" } })) : c.delete("/__vj_tone");
+          }).catch(function () {});
+          showToneUI();
+        }
+        function showToneUI() {
+          if (tone) $("tn-sel").value = tone.t;
+          $("tn-on").innerHTML = tone ? "&#x1F507; Turn off tone" : "&#x1F50A; Turn on tone";
+        }
+        $("tn-test").addEventListener("click", function () { playTone($("tn-sel").value); });
+        $("tn-sel").addEventListener("change", function () { playTone($("tn-sel").value); if (tone) { tone.t = $("tn-sel").value; saveTone(); } });
+        $("tn-on").addEventListener("click", function () {
+          if (tone) { tone = null; saveTone(); toast("Tone off", 2500); return; }
+          tone = { t: $("tn-sel").value }; saveTone(); playTone();
+          if (window.VJ && VJ.requestPerm) { try { VJ.requestPerm(); } catch (e) {} }
+          else if ("Notification" in window && Notification.permission === "default") Notification.requestPermission();
+          if (navigator.serviceWorker) navigator.serviceWorker.ready.then(function (r) { if (r.periodicSync) return navigator.permissions.query({ name: "periodic-background-sync" }).then(function (st) { if (st.state === "granted") return r.periodicSync.register("vj-rate", { minInterval: 60 * 60 * 1000 }); }); }).catch(function () {});
+          toast("\u2705 Tone on! You'll hear it when the rate changes.", 4000);
+        });
+        showToneUI();
+        function onRates() {
+          var cur = {}, changed = [], has = false;
+          KS.forEach(function (k) { if (rates[k] > 0) { cur[k] = rates[k]; has = true; } });
+          if (!has) return;
+          if (lastSeen) KS.forEach(function (k) { if (cur[k] && lastSeen[k] && Math.abs(cur[k] - lastSeen[k]) > 0.001) changed.push(k); });
+          lastSeen = cur; try { localStorage.setItem("vjLast", JSON.stringify(cur)); } catch (e) {}
+          if (window.VJ && VJ.setLast) { try { VJ.setLast(JSON.stringify(cur)); } catch (e) {} }
+          if (!changed.length || !tone) return;
+          var body = "24K AED " + fmt(cur["24"] || 0) + " \u2022 22K AED " + fmt(cur["22"] || 0) + " \u2022 21K AED " + fmt(cur["21"] || 0) + " \u2022 18K AED " + fmt(cur["18"] || 0);
+          playTone();
+          toast("\uD83D\uDD14 Gold rate updated: 22K AED " + fmt(cur["22"] || 0), 5000);
+          if (document.hidden) {
+            if (window.VJ && VJ.rateNotify) { try { VJ.rateNotify("Vijaya Jewellery \u2013 Gold rate updated", body); } catch (e) {} }
+            else if ("Notification" in window && Notification.permission === "granted" && navigator.serviceWorker) navigator.serviceWorker.ready.then(function (r) { r.showNotification("Vijaya Jewellery \u2013 Gold rate updated", { body: body, icon: "/icon-192.png", badge: "/icon-192.png", tag: "vj-rate", renotify: true, vibrate: [200, 100, 200] }); }).catch(function () {});
+          }
+        }
+        function refresh() {
+          if (loading) return; loading = true;
+          $("refresh").classList.add("is-loading");
+          load(BASE + "&sheet=Sheet1", "vjRates")
+            .then(function (d) {
+              applySheet1(d);
+              render(true);
+              checkAlert(); onRates();
+              everLoaded = true;
+              $("stale").hidden = true; $("live").classList.remove("is-stale");
+              $("updated").textContent = "Updated " + dubai({ hour: "2-digit", minute: "2-digit", hour12: false });
+            })
+            .catch(function () {
+              if (!everLoaded) {
+                rates = Object.assign({}, FALLBACK); render(false);
+                $("updated").textContent = "Couldn't load live rates";
+              }
+              $("stale").hidden = false; $("live").classList.add("is-stale");
+            })
+            .then(function () { loading = false; $("refresh").classList.remove("is-loading"); });
+        }
+        /* ---------- live push from Firebase Realtime Database ---------- */
+        var RTDB = "https://vijaya-jewellery-llc-default-rtdb.asia-southeast1.firebasedatabase.app", es = null;
+        function applyLive(d) {
+          if (!d) return;
+          var n = 0;
+          KS.forEach(function (k) {
+            var v = parseFloat(d["k" + k]); if (v > 0) { rates[k] = v; n++; }
+            var y = parseFloat(d["y" + k]); if (y > 0) yest[k] = y;
+          });
+          if (!n) return;
+          render(true); checkAlert(); onRates(); everLoaded = true;
+          $("stale").hidden = true; $("live").classList.remove("is-stale");
+          $("updated").textContent = "Updated " + dubai({ hour: "2-digit", minute: "2-digit", hour12: false });
+        }
+        function startLive() {
+          if (!window.EventSource || es) return;
+          try {
+            es = new EventSource(RTDB + "/rates.json");
+            var on = function (e) { try { var m = JSON.parse(e.data); if (m && m.path === "/") applyLive(m.data); else if (m && m.data != null) refresh(); } catch (x) {} };
+            es.addEventListener("put", on); es.addEventListener("patch", on);
+            es.onerror = function () { if (es && es.readyState === 2) { es = null; setTimeout(startLive, 15000); } };
+          } catch (x) { es = null; }
+        }
+        render(false);
+        refresh();
+        startLive();
+        setInterval(function () { if (!document.hidden) refresh(); }, 60 * 1000);
+        document.addEventListener("visibilitychange", function () { if (!document.hidden) refresh(); });
+        window.addEventListener("online", refresh);
+        $("refresh").addEventListener("click", refresh);
+
+        /* pull to refresh */
+        var startY = null, pulled = 0;
+        window.addEventListener("touchstart", function (e) { startY = window.scrollY <= 0 ? e.touches[0].clientY : null; }, { passive: true });
+        window.addEventListener("touchmove", function (e) {
+          if (startY == null) return;
+          pulled = Math.max(0, e.touches[0].clientY - startY);
+          $("pull").style.height = Math.min(pulled / 2, 36) + "px";
+          $("pull").textContent = pulled > 90 ? "Release to refresh" : "Pull to refresh";
+        }, { passive: true });
+        window.addEventListener("touchend", function () {
+          if (startY != null && pulled > 90) refresh();
+          startY = null; pulled = 0; $("pull").style.height = "0";
+        });
+
+        /* ---------- ticker ---------- */
+        var msgs = ["Welcome to Vijaya Jewellery", "مرحبًا بكم في مجوهرات فيجايا", "विजया ज्वेलरी में आपका स्वागत है"], mi = 0;
+        var tick = $("tick"), box = tick.parentNode;
+        function runTicker() {
+          var text = msgs[mi % msgs.length]; mi++;
+          var rtl = /[\u0590-\u08FF\uFB1D-\uFEFC]/.test(text);
+          tick.classList.remove("is-run");
+          tick.textContent = text;
+          tick.setAttribute("dir", rtl ? "rtl" : "ltr");
+          tick.setAttribute("lang", rtl ? "ar" : "");
+          var W = box.clientWidth, w = tick.offsetWidth;
+          /* RTL text enters from the left, LTR from the right */
+          tick.style.setProperty("--x-from", (rtl ? -w : W) + "px");
+          tick.style.setProperty("--x-to", (rtl ? W : -w) + "px");
+          tick.style.setProperty("--x-dur", ((W + w) / 45).toFixed(1) + "s");
+          void tick.offsetWidth;
+          tick.classList.add("is-run");
+        }
+        tick.addEventListener("animationend", runTicker);
+        runTicker();
+        load(BASE + "&sheet=Sheet2&range=A2:A50", "vjPromo").then(function (d) {
+          var list = d.table.rows.map(function (r) { return cell(r, 0).trim(); }).filter(Boolean);
+          if (list.length) { msgs = list; mi = 0; }
+        }).catch(function () {});
+
+        /* ---------- share & call ---------- */
+        function toast(html, ms) {
+          var t = $("toast"); t.innerHTML = html; t.classList.add("is-show");
+          clearTimeout(toast.t); toast.t = setTimeout(function () { t.classList.remove("is-show"); }, ms || 3000);
+        }
+        $("share").addEventListener("click", function () {
+          var KS = ["24", "22", "21", "18"], now = new Date();
+          var dstr = now.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+          var tstr = now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+          function arrow(k) { var y = yest[k], v = rates[k]; if (y == null || v == null || v === y) return ""; return v > y ? " 🔺" : " 🔻"; }
+          var text = "✨ *VIJAYA JEWELLERY LLC* ✨\n" +
+            "📅 Gold rates · " + dstr + ", " + tstr + "\n" +
+            "━━━━━━━━━━━━━━\n" +
+            KS.map(function (k) { return "🟡 *" + k + "K*  :  AED " + fmt(rates[k]) + " /g" + arrow(k); }).join("\n") + "\n" +
+            "━━━━━━━━━━━━━━\n" +
+            "📍 Gold Centre, Deira · 04 226 4635\n" +
+            "📍 Sharjah Shopping Centre, Rolla · 06 561 3815\n" +
+            "📲 Live rates: https://vijayajewelleryllc.web.app";
+          var wa = "https://wa.me/?text=" + encodeURIComponent(text);
+          function textShare() {
+            if (navigator.share) {
+              navigator.share({ title: "Vijaya Jewellery gold rates", text: text })
+                .then(function () { toast("Rates shared", 2500); })
+                .catch(function (e) { if (e && e.name === "AbortError") $("toast").classList.remove("is-show"); else fallback(); });
+              return;
+            }
+            fallback();
+          }
+          function fallback() {
+            var copied;
+            try { copied = navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(text) : Promise.reject(); } catch (e) { copied = Promise.reject(); }
+            copied.then(function () { return true; }, function () { return false; }).then(function (ok) {
+              toast((ok ? "Rates copied. " : "") + '<a href="' + wa + '" target="_blank" rel="noopener">Share on WhatsApp</a>', 8000);
+            });
+          }
+          function rr(x, X, Y, W, H, r) { x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + W, Y, X + W, Y + H, r); x.arcTo(X + W, Y + H, X, Y + H, r); x.arcTo(X, Y + H, X, Y, r); x.arcTo(X, Y, X + W, Y, r); x.closePath(); }
+          function card() {
+            return new Promise(function (res, rej) {
+              var logo = new Image();
+              logo.onload = function () { draw(logo); }; logo.onerror = function () { draw(null); };
+              logo.src = "icon-512.png";
+              function draw(lg) {
+                try {
+                  var c = document.createElement("canvas"); c.width = 1080; c.height = 1350; var x = c.getContext("2d");
+                  var g = x.createLinearGradient(0, 0, 0, 1350); g.addColorStop(0, "#5a0c16"); g.addColorStop(1, "#2a0408");
+                  x.fillStyle = g; x.fillRect(0, 0, 1080, 1350);
+                  x.strokeStyle = "#d4af37"; x.lineWidth = 6; rr(x, 30, 30, 1020, 1290, 36); x.stroke();
+                  x.lineWidth = 2; rr(x, 46, 46, 988, 1258, 28); x.stroke();
+                  x.textAlign = "center";
+                  if (lg) x.drawImage(lg, 440, 80, 200, 200);
+                  x.fillStyle = "#f7d774"; var fs = 64; do { x.font = "800 " + fs + "px Poppins, sans-serif"; fs -= 2; } while (x.measureText("VIJAYA JEWELLERY LLC").width > 920 && fs > 30); x.fillText("VIJAYA JEWELLERY LLC", 540, 350);
+                  x.fillStyle = "#e9d9b0"; x.font = "500 30px Poppins, sans-serif"; x.fillText("TODAY'S GOLD RATES", 540, 400);
+                  x.fillStyle = "#fff"; x.font = "600 32px Poppins, sans-serif"; x.fillText(dstr + "  ·  " + tstr, 540, 455);
+                  KS.forEach(function (k, i) {
+                    var Y = 510 + i * 150;
+                    var gg = x.createLinearGradient(90, Y, 990, Y); gg.addColorStop(0, "rgba(212,175,55,0.22)"); gg.addColorStop(1, "rgba(212,175,55,0.06)");
+                    x.fillStyle = gg; rr(x, 90, Y, 900, 124, 22); x.fill();
+                    x.strokeStyle = "rgba(247,215,116,0.6)"; x.lineWidth = 2; rr(x, 90, Y, 900, 124, 22); x.stroke();
+                    x.textAlign = "left"; x.fillStyle = "#f7d774"; x.font = "800 60px Poppins, sans-serif"; x.fillText(k + "K", 130, Y + 84);
+                    x.textAlign = "right"; x.fillStyle = "#fff"; x.font = "800 60px Poppins, sans-serif"; x.fillText("AED " + fmt(rates[k]), 880, Y + 84);
+                    var y = yest[k], v = rates[k];
+                    if (y != null && v !== y) { x.fillStyle = v > y ? "#3ddc84" : "#ff5a5a"; x.font = "700 44px sans-serif"; x.fillText(v > y ? "▲" : "▼", 955, Y + 80); }
+                  });
+                  x.textAlign = "center"; x.fillStyle = "#e9d9b0"; x.font = "500 26px Poppins, sans-serif";
+                  x.fillText("Per gram · rates may change during the day", 540, 1160);
+                  x.fillStyle = "#fff"; x.font = "600 28px Poppins, sans-serif";
+                  x.fillText("Gold Centre, Deira · 04 226 4635", 540, 1215);
+                  x.fillText("Sharjah Shopping Centre, Rolla · 06 561 3815", 540, 1260);
+                  res(c);
+                } catch (e) { rej(e); }
+              }
+            });
+          }
+          toast("Preparing rates to share…", 8000);
+          card().then(function (c) {
+            var b64 = c.toDataURL("image/png");
+            if (window.VJ && VJ.shareImage) { VJ.shareImage(b64.split(",")[1], text); $("toast").classList.remove("is-show"); return; }
+            c.toBlob(function (blob) {
+              var f = blob && window.File ? new File([blob], "Vijaya-Gold-Rates.png", { type: "image/png" }) : null;
+              if (f && navigator.canShare && navigator.canShare({ files: [f] })) {
+                navigator.share({ files: [f], text: text, title: "Vijaya Jewellery gold rates" })
+                  .then(function () { toast("Rates shared", 2500); })
+                  .catch(function (e) { if (e && e.name === "AbortError") $("toast").classList.remove("is-show"); else textShare(); });
+              } else textShare();
+            }, "image/png");
+          }).catch(textShare);
+        });
+        var sheet = $("sheet");
+        function openSheet(o) { sheet.classList.toggle("is-open", o); sheet.setAttribute("aria-hidden", o ? "false" : "true"); }
+        $("call").addEventListener("click", function () { openSheet(true); });
+        $("sheet-close").addEventListener("click", function () { openSheet(false); });
+        sheet.addEventListener("click", function (e) { if (e.target === sheet) openSheet(false); });
+        document.addEventListener("keydown", function (e) { if (e.key === "Escape") openSheet(false); });
+      })();
+    </script>
+  
+<!-- Install App button -->
+<style>
+#vjInstall{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:99999;display:none;align-items:center;gap:8px;padding:13px 22px;border:0;border-radius:30px;background:linear-gradient(135deg,#f7d774,#c9962b);color:#1a1200;font:700 16px 'Poppins',sans-serif;box-shadow:0 6px 24px rgba(212,175,55,.5);cursor:pointer}
+#vjTip{position:fixed;left:12px;right:12px;bottom:calc(164px + env(safe-area-inset-bottom));z-index:99999;display:none;background:#1b1b1f;color:#fff;border:1px solid #c9962b;border-radius:14px;padding:12px 14px;font:14px 'Noto Sans',sans-serif;text-align:center}
+</style>
+<div id="vjTip"></div>
+<button id="vjInstall" type="button">&#128242; Install App</button>
+<script>
+(function(){
+ if('serviceWorker' in navigator){
+  var up=document.createElement('div');up.id='vjUpd';
+  up.innerHTML='&#10024; New update available <button id="vjUpdBtn">Update</button>';
+  up.style.cssText='position:fixed;top:calc(12px + env(safe-area-inset-top));left:12px;right:12px;z-index:100000;display:none;justify-content:space-between;align-items:center;background:#1b1b1f;color:#f7d774;border:1px solid #c9962b;border-radius:14px;padding:10px 14px;font:600 15px Poppins,sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.5)';
+  document.body.appendChild(up);
+  var w=null;function show(x){w=x;up.style.display='flex';}
+  up.querySelector('button').style.cssText='border:0;border-radius:20px;padding:7px 16px;background:linear-gradient(135deg,#f7d774,#c9962b);color:#1a1200;font:700 14px Poppins,sans-serif';
+  up.querySelector('button').onclick=function(){if(w)w.postMessage('update-now');else location.reload();};
+  var hadCtrl=!!navigator.serviceWorker.controller,reloaded=false;
+  navigator.serviceWorker.addEventListener('controllerchange',function(){if(hadCtrl&&!reloaded){reloaded=true;location.reload();}});
+  navigator.serviceWorker.register('/sw.js').then(function(reg){
+    if(reg.waiting&&navigator.serviceWorker.controller)show(reg.waiting);
+    reg.addEventListener('updatefound',function(){var n=reg.installing;n.addEventListener('statechange',function(){if(n.state==='installed'&&navigator.serviceWorker.controller)show(n);});});
+    setInterval(function(){reg.update();},30*60*1000);
+    document.addEventListener('visibilitychange',function(){if(!document.hidden)reg.update();});
+  }).catch(function(){});
+ }
+ var b=document.getElementById('vjInstall'),tip=document.getElementById('vjTip'),dp=null;
+ var standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+ if(standalone)return;
+ var ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+ var inApp=/FBAN|FBAV|Instagram|WhatsApp|wv\)/i.test(navigator.userAgent);
+ window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;b.style.display='flex';});
+ if(ios||inApp)b.style.display='flex';
+ setTimeout(function(){b.style.display='flex';},2500);
+ function say(t){tip.innerHTML=t;tip.style.display='block';setTimeout(function(){tip.style.display='none';},9000);}
+ b.addEventListener('click',function(){
+  if(dp){dp.prompt();dp.userChoice.then(function(){dp=null;b.style.display='none';});return;}
+  if(ios)say('Tap the Share button <b>&#11014;&#65039;</b> below, then <b>"Add to Home Screen"</b>');
+  else if(inApp)say('Tap <b>&#8942;</b> at the top, choose <b>"Open in Chrome"</b>, then tap Install App');
+  else say('Tap <b>&#8942;</b> in Chrome, then <b>"Add to Home screen"</b> / <b>"Install app"</b>');
+ });
+ window.addEventListener('appinstalled',function(){b.style.display='none';say('&#9989; Installed! Find Vijaya Gold on your home screen.');});
+})();
+</script>
+<!--anim-start-->
+<style id="vj-anim">
+@property --va{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes vaFlip{from{opacity:0;transform:perspective(700px) rotateX(-75deg)}to{opacity:1;transform:none}}
+@keyframes vaSpin{to{--va:360deg}}
+@keyframes vaBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@keyframes vaWave{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.x-rate,.x-calc,.x-panel,.x-shop{transform-origin:top center;animation:vaFlip .8s cubic-bezier(.2,.9,.3,1.2) both}
+.x-rate:nth-child(1){animation-delay:.05s}.x-rate:nth-child(2){animation-delay:.2s}.x-rate:nth-child(3){animation-delay:.35s}.x-rate:nth-child(4){animation-delay:.5s}.x-calc{animation-delay:.6s}
+.x-rate{position:relative;isolation:isolate}
+.x-rate::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;z-index:-1;pointer-events:none;
+ background:conic-gradient(from var(--va),transparent 0 70%,#fff1c1 80%,#e8c16a 88%,transparent 96%);
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:vaSpin 4s linear infinite}
+.x-rate:nth-child(2)::before{animation-duration:3s}
+.x-logo{animation:vaBreath 3.5s ease-in-out infinite}
+.x-rate__p span{display:inline-block;animation:vaWave 2.8s ease-in-out infinite}
+.x-rate:nth-child(2) .x-rate__p span{animation-delay:-.7s}.x-rate:nth-child(3) .x-rate__p span{animation-delay:-1.4s}.x-rate:nth-child(4) .x-rate__p span{animation-delay:-2.1s}
+.va-sp{position:fixed;inset:0;pointer-events:none;z-index:0}
+</style>
+<canvas class="va-sp" id="vasp" aria-hidden="true"></canvas>
+<script>
+(function(){
+ var c=document.getElementById('vasp'),x=c.getContext('2d'),W,H,P=[];
+ function rs(){W=c.width=innerWidth;H=c.height=innerHeight}rs();addEventListener('resize',rs);
+ function mk(t){return{x:Math.random()*W,y:t?Math.random()*H:-10,s:Math.random()*3+2,v:Math.random()*.6+.3,a:Math.random()*6.28,w:Math.random()*.03+.01}}
+ for(var i=0;i<22;i++)P.push(mk(1));
+ (function f(){x.clearRect(0,0,W,H);for(var i=0;i<P.length;i++){var q=P[i];q.y+=q.v;q.a+=q.w;q.x+=Math.sin(q.a)*.4;if(q.y>H+10)P[i]=mk(0);
+  var sx=Math.abs(Math.cos(q.a*3));x.save();x.translate(q.x,q.y);x.scale(sx||.1,1);x.globalAlpha=.55;
+  var g=x.createRadialGradient(-q.s/3,-q.s/3,0,0,0,q.s);g.addColorStop(0,'#fff4cf');g.addColorStop(.6,'#e8c16a');g.addColorStop(1,'#a8781f');
+  x.fillStyle=g;x.beginPath();x.arc(0,0,q.s,0,6.28);x.fill();x.restore()}requestAnimationFrame(f)})();
+})();
+</script>
+<!--anim-end-->
+
+<!--slide-start-->
+<style id="vj-slide">
+.x-banner{position:relative;overflow:hidden}
+.x-banner .vs-l{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease}
+.x-banner .vs-l.on{opacity:1;animation:vsZoom 6s ease-out both}
+@keyframes vsZoom{from{transform:scale(1)}to{transform:scale(1.12)}}
+.vs-cap{position:absolute;left:12px;bottom:12px;z-index:3;font:600 13px Poppins,sans-serif;color:#2a1606;background:linear-gradient(135deg,#fff1c1,#e8c16a);border-radius:20px;padding:5px 12px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.vs-dots{position:absolute;right:12px;bottom:14px;z-index:3;display:flex;gap:6px}
+.vs-dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,241,193,.45);transition:.3s}
+.vs-dots i.on{background:#f8e3a8;width:18px;border-radius:4px}
+</style>
+<script>
+(function(){
+ var fig=document.querySelector('.x-banner'),hero=document.getElementById('img-hero');if(!fig||!hero)return;
+ var ids=[['img-hero','Vijaya Collection'],['img-bangl','Bangles'],['img-neck','Necklaces'],['img-ring','Rings']];
+ var A=document.createElement('img'),B=document.createElement('img');A.className=B.className='vs-l';A.alt=B.alt='';
+ var cap=document.createElement('span');cap.className='vs-cap';var dots=document.createElement('div');dots.className='vs-dots';
+ ids.forEach(function(){dots.appendChild(document.createElement('i'))});
+ fig.appendChild(A);fig.appendChild(B);fig.appendChild(cap);fig.appendChild(dots);
+ var k=0,cur=A,nx=B;
+ function show(){var e=document.getElementById(ids[k][0]);if(!e||!e.src){k=(k+1)%ids.length;return}
+  nx.src=e.src;nx.onload=function(){nx.classList.remove('on');void nx.offsetWidth;nx.classList.add('on');cur.classList.remove('on');var t=cur;cur=nx;nx=t;};
+  cap.textContent=ids[k][1];[].forEach.call(dots.children,function(d,i){d.classList.toggle('on',i==k)});k=(k+1)%ids.length;}
+ show();setInterval(show,4000);
+})();
+</script>
+<!--slide-end-->
+
+</body>
+</html>
